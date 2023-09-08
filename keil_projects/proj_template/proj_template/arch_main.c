@@ -176,8 +176,50 @@ void ble_init(void)
     }
 }
 
+// personal adc add
+void SYS_Init(void)
+{
+    SYS_UnlockReg();
+
+    SystemCoreClockUpdate();
+
+    CLK_EnableModuleClock(ADC_MODULE);
+
+    SYS->P1_MFP |= SYS_MFP_P14_UART1_RXD|SYS_MFP_P15_UART1_TXD;   	
+		GPIO_ENABLE_DIGITAL_PATH(P1,BIT4);
+		CLK_EnableModuleClock(UART1_MODULE);
+
+    SYS_LockReg();
+}
+
+void UART_INIT(void)
+{
+    UART_InitTypeDef Init_Struct;
+
+    Init_Struct.UART_BaudRate = 115200;
+    Init_Struct.UART_LineCtrl = Uart_line_8n1;
+
+    /* Init UART0 for printf */
+    UART_Init(UART1, &Init_Struct);
+    UART_EnableFifo(UART1);
+}
+
 int main(void)
 {
+/*
+	SYS_Init();
+	UART_INIT();
+	// Enable channel 1
+	ADC_Open(ADC, 0, 0, 0x01 << 1);
+	//Select ADC input range.1 means 0.4V~2.4V ;0 means 0.4V~1.4V.
+  	//0.4V~2.4V & 0.4V~1.4V both are theoretical value,the real range is determined by bandgap voltage.
+  	ADC_SelInputRange(ADC_INPUTRANGE_HIGH);
+
+	//P13LDO_ENÀ­¸ß;
+	SYS->P1_MFP |= SYS_MFP_P13_GPIO;
+	GPIO_SetMode(P1, BIT3, GPIO_MODE_OUTPUT);
+	GPIO_PullUp(P1, BIT3,GPIO_PULLUP_DISABLE);
+*/
 	stack_sp_restore();
     ble_init();
     ble_stack_process();

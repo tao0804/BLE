@@ -102,14 +102,33 @@ static int proj_template_server_peer_write_data_ind_handler(ke_msg_id_t const ms
                                                ke_task_id_t const dest_id,
                                                ke_task_id_t const src_id)
 {
-#if 1
+#if 0
     printf("recv %d\n", param->packet_size);
 #else
 	uint8_t Sendata[PROJ_TEMPLATE_SERVER_PACKET_SIZE] = {0};
+	uint16 adcCode[2];
 	
 	show_reg3(param->packet,param->packet_size);
-	memcpy(Sendata,param->packet,param->packet_size);
-	app_proj_template_send_value(PROJ_TEMPLATE_IDX_CTRL_VAL,Sendata,param->packet_size);
+	// memcpy(Sendata,param->packet,param->packet_size);
+	
+
+	if(0xf3 == param->packet[0])
+	{
+		ADC_Open(ADC, 0, 0, 0x01 << 1);
+		ADC_START_CONV(ADC);
+		while(ADC_IS_BUSY(ADC)){;}	// 阻塞到转换完成
+		adcCode[0] = (uint16_t)ADC_GET_CONVERSION_DATA(ADC, 0);
+
+		ADC_Open(ADC, 0, 0, 0x01 << 2);
+		ADC_START_CONV(ADC);
+		while(ADC_IS_BUSY(ADC)){;}
+		adcCode[1] = (uint16_t)ADC_GET_CONVERSION_DATA(ADC, 0);
+
+		memcpy(Sendata, adcCode, sizeof(adcCode));
+		app_proj_template_send_value(PROJ_TEMPLATE_IDX_CTRL_VAL,Sendata, 4);
+	}
+	
+//	app_proj_template_send_value(PROJ_TEMPLATE_IDX_CTRL_VAL,Sendata,param->packet_size);
 #endif
 	return (KE_MSG_CONSUMED);
 }

@@ -5,3 +5,7 @@
 /keil_projects/*/*.uvguix.*
 
 !/keil_projects/proj_template
+
+
+*.code-workspace
+.vscode

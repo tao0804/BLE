@@ -107,15 +107,17 @@ static int proj_template_server_peer_write_data_ind_handler(ke_msg_id_t const ms
     printf("recv %d\n", param->packet_size);
 #else
 	uint8_t Sendata[PROJ_TEMPLATE_SERVER_PACKET_SIZE] = {0};
-	
 	show_reg3(param->packet,param->packet_size);
-		if(0xf3 == param->packet[0])
-	{
+
+	if(0xf3 == param->packet[0])
+	{	// sprintf成功，则返回写入的字符总数
+		uint8 len = sprintf((char*)Sendata, "ch2:%.3f;ch3:%.3f", 
+							mcu_adc_get_voltage(MCU_P12_ADC_CH2),
+							mcu_adc_get_voltage(MCU_P13_ADC_CH3));
 		
-		uint32 voltage = 1000 * adc_getVoltage();	// mv
-		
-		memcpy(Sendata, &voltage, 4);
-		app_proj_template_send_value(PROJ_TEMPLATE_IDX_CTRL_VAL,Sendata, 4);
+		// uint32 voltage = 1000 * adc_getVoltage();	// mv
+		// memcpy(Sendata, &voltage, 4);
+		app_proj_template_send_value(PROJ_TEMPLATE_IDX_CTRL_VAL,Sendata, len);
 	}
 		
 //	app_proj_template_send_value(PROJ_TEMPLATE_IDX_CTRL_VAL,Sendata,param->packet_size);

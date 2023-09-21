@@ -42,6 +42,8 @@
 #include "ota_server.h"
 #endif
 
+#include "mcu_hal.h"
+
 const app_info_t app_info __attribute__((at(APP_INFO_ADDR)))=
 {
 	.co_default_bdname = "proj_template",
@@ -53,6 +55,7 @@ const app_info_t app_info __attribute__((at(APP_INFO_ADDR)))=
 };
 
 //wakeup init
+// 唤醒之后 mcu 处理 RF 的 tx、rx 收发数据等其他外设工作。当所有事情处理完后又进入休眠状态
 void ble_sleep_wakeup_init()
 {
 	periph_init();																//System peripheral initialization
@@ -135,6 +138,9 @@ void ble_stack_process()
 		rf_calibration_process();
 		#endif
 		
+		// 进入低功耗
+		// 在低功耗下，只有 32k 在工作，mcu 的其他资源都是处于关闭状态。
+		// 休眠的时间等于广播间隔和连接间隔。休眠时间到，mcu 唤醒
         if (app_var.default_sleep_en)
         {
             GLOBAL_INT_DISABLE();
@@ -158,6 +164,7 @@ void ble_stack_process()
             // Checks for sleep have to be done with interrupt disabled
             GLOBAL_INT_RESTORE();
         }
+		mcu_adc_main();
     }
 }
 
@@ -176,52 +183,17 @@ void ble_init(void)
     }
 }
 
-// personal adc add
-void SYS_Init(void)
+void user_init(void)
 {
-    SYS_UnlockReg();
-
-    SystemCoreClockUpdate();
-
-    CLK_EnableModuleClock(ADC_MODULE);
-
-    SYS->P1_MFP |= SYS_MFP_P14_UART1_RXD|SYS_MFP_P15_UART1_TXD;   	
-		GPIO_ENABLE_DIGITAL_PATH(P1,BIT4);
-		CLK_EnableModuleClock(UART1_MODULE);
-
-    SYS_LockReg();
-}
-
-void UART_INIT(void)
-{
-    UART_InitTypeDef Init_Struct;
-
-    Init_Struct.UART_BaudRate = 115200;
-    Init_Struct.UART_LineCtrl = Uart_line_8n1;
-
-    /* Init UART0 for printf */
-    UART_Init(UART1, &Init_Struct);
-    UART_EnableFifo(UART1);
+	mcu_gpio_user_init();
+	mcu_adc_user_init();
 }
 
 int main(void)
 {
-/*
-	SYS_Init();
-	UART_INIT();
-	// Enable channel 1
-	ADC_Open(ADC, 0, 0, 0x01 << 1);
-	//Select ADC input range.1 means 0.4V~2.4V ;0 means 0.4V~1.4V.
-  	//0.4V~2.4V & 0.4V~1.4V both are theoretical value,the real range is determined by bandgap voltage.
-  	ADC_SelInputRange(ADC_INPUTRANGE_HIGH);
-
-	//P13LDO_EN拉高;
-	SYS->P1_MFP |= SYS_MFP_P13_GPIO;
-	GPIO_SetMode(P1, BIT3, GPIO_MODE_OUTPUT);
-	GPIO_PullUp(P1, BIT3,GPIO_PULLUP_DISABLE);
-*/
 	stack_sp_restore();
     ble_init();
+	user_init();
     ble_stack_process();
 }
 

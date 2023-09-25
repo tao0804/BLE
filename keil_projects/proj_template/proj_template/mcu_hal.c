@@ -1,7 +1,7 @@
 #include "mcu_hal.h"
 #include "stack_svc_api.h"
 
-#define MCU_AVDD_CFG 3.3
+#define MCU_AVDD_CFG 2.5
 #define ARRAY_NUM(arr)	(sizeof(arr)/sizeof(arr[0]))
 
 uint8 mcuAdcTableNum = 0;
@@ -21,8 +21,8 @@ void mcu_gpio_user_init(void)
 	GPIO_InitOutput(P1, BIT0, GPIO_HIGH_LEVEL);
 	GPIO_PullUp(P1, BIT0, GPIO_PULLUP_ENABLE);
 	GPIO_ENABLE_DIGITAL_PATH(P1, BIT0);
-	GPIO_SetBits(P1, BIT0);
-//	GPIO_ClearBits(P1, BIT0);	// 拉低测低功耗电流
+	// GPIO_SetBits(P1, BIT0);
+	GPIO_ClearBits(P1, BIT0);	// 拉低测低功耗电流
 }
 ///////////////////////////////////////////////adc_driver///////////////////////////////////////////////
 
@@ -115,3 +115,11 @@ void mcu_adc_user_init(void)
 {
 	mcu_adc_init(adcTable, ARRAY_NUM(adcTable));
 }
+
+// float mcu_adc_get_temperature(uint8 index)
+// {
+// 	float voltage = mcu_adc_get_voltage(index);
+// 	float temperature = (voltage - sensorOffset) / sensorSensitivity;
+// 	p_mcuAdcTable[index].temperature = temperature;
+// 	return p_mcuAdcTable[index].temperature;
+// }

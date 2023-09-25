@@ -164,7 +164,7 @@ void ble_stack_process()
             // Checks for sleep have to be done with interrupt disabled
             GLOBAL_INT_RESTORE();
         }
-		mcu_adc_main();
+		// mcu_adc_main();
     }
 }
 
@@ -193,7 +193,7 @@ int main(void)
 {
 	stack_sp_restore();
     ble_init();
-	user_init();
+	mcu_gpio_user_init();
     ble_stack_process();
 }
 

@@ -177,8 +177,6 @@ void app_fun_resgister(void)
 //	((interrupt_register_handler)SVC_interrupt_register)(SysTick_IRQ,SysTick_IntHandler);
 //}
 
-#define ENABLE_LDO_P13
-#define ENABLE_ADC
 void periph_init(void)
 {		
 	/*---------------------------------------------------------------------------------------------------------*/
@@ -248,35 +246,6 @@ void periph_init(void)
     hci_uart_task_init();
 #endif
 
-#ifdef ENABLE_ADC	// 我没明白这里两个#if
-	CLK_EnableModuleClock(ADC_MODULE);
-	//差初始化gpio
-
-	//P10设置成ADC channel1 analog input
-	SYS->P1_MFP |= SYS_MFP_P10_ADC_CH1;
-	//P12设置成ADC channel2 analog input
-	SYS->P1_MFP |= SYS_MFP_P12_ADC_CH2;
-
-	// Enable channel 1
-	ADC_Open(ADC, 0, 0, 0x01 << 1);
-	// ADC_Open(ADC, 0, 0, 0x01 << 2);
-
-	//Select ADC input range.1 means 0.4V~2.4V ;0 means 0.4V~1.4V.
-	//0.4V~2.4V & 0.4V~1.4V both are theoretical value,the real range is determined by bandgap voltage.
-	ADC_SelInputRange(ADC_INPUTRANGE_HIGH);
-
-	// Power on ADC
-	ADC_POWER_ON(ADC);
-#endif
-
-#ifdef ENABLE_LDO_P13
-	//P13LDO_EN拉高;
-	SYS->P1_MFP |= SYS_MFP_P13_GPIO;
-	GPIO_SetMode(P1, BIT3, GPIO_MODE_OUTPUT);
-	GPIO_PullUp(P1, BIT3, GPIO_PULLUP_DISABLE);
-	// 还差输出为高
-	GPIO_SetBits(P1, BIT3);
-#endif
 
 //	SysTick_init(); 
 }

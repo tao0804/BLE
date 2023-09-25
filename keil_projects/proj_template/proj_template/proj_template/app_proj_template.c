@@ -114,9 +114,6 @@ static int proj_template_server_peer_write_data_ind_handler(ke_msg_id_t const ms
 		uint8 len = sprintf((char*)Sendata, "ch2:%.3f;ch3:%.3f", 
 							mcu_adc_get_voltage(MCU_P12_ADC_CH2),
 							mcu_adc_get_voltage(MCU_P13_ADC_CH3));
-		
-		// uint32 voltage = 1000 * adc_getVoltage();	// mv
-		// memcpy(Sendata, &voltage, 4);
 		app_proj_template_send_value(PROJ_TEMPLATE_IDX_CTRL_VAL,Sendata, len);
 	}
 		

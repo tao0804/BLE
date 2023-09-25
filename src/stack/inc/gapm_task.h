@@ -758,6 +758,7 @@ struct gapm_addr_solved_ind
 };
 
 /// Advertising data that contains information set by host. - DEPRECATED
+// 广播数据主要修改广播类型、广播间隔、广播模式。广播包(adv_data)和请求响应包(scan_rsp_data)的内容
 struct gapm_adv_host
 {
     /// Advertising mode :
@@ -765,7 +766,7 @@ struct gapm_adv_host
     /// - GAP_GEN_DISCOVERABLE: General discoverable mode
     /// - GAP_LIM_DISCOVERABLE: Limited discoverable mode
     /// - GAP_BROADCASTER_MODE: Broadcaster mode
-    uint8_t              mode;
+    uint8_t              mode;	// 广播模式
 
     /// Advertising filter policy:
     /// - ADV_ALLOW_SCAN_ANY_CON_ANY: Allow both scan and connection requests from anyone
@@ -783,11 +784,11 @@ struct gapm_adv_host
     /// Advertising data
     //uint8_t              adv_data[GAP_ADV_DATA_LEN-3];
 	
-	uint8_t              adv_data[GAP_ADV_DATA_LEN];
+	uint8_t              adv_data[GAP_ADV_DATA_LEN];	// 广播包
     /// Scan response data length- maximum 31 bytes
     uint8_t              scan_rsp_data_len;
     /// Scan response data
-    uint8_t              scan_rsp_data[GAP_SCAN_RSP_DATA_LEN];
+    uint8_t              scan_rsp_data[GAP_SCAN_RSP_DATA_LEN];	// 请求响应包
     /// Peer address
     struct gap_bdaddr peer_addr;
 };

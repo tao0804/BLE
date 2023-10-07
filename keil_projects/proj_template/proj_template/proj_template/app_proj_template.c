@@ -22,6 +22,7 @@
 #include "app.h"
 #include "stack_svc_api.h"
 #include "mcu_hal.h"
+#include "temperature.h"
 
 static struct app_proj_template_env_tag app_proj_template_env;
 void app_proj_template_init(void)
@@ -108,13 +109,15 @@ static int proj_template_server_peer_write_data_ind_handler(ke_msg_id_t const ms
 #else
 	uint8_t Sendata[PROJ_TEMPLATE_SERVER_PACKET_SIZE] = {0};
 	show_reg3(param->packet,param->packet_size);
-
-	// sprintf成功，则返回写入的字符总数
-	uint8 len = sprintf((char*)Sendata, "ch2:%.3f;ch3:%.3f", 
-						mcu_adc_get_temperature(MCU_P12_ADC_CH2),
-						mcu_adc_get_temperature(MCU_P13_ADC_CH3));
-	app_proj_template_send_value(PROJ_TEMPLATE_IDX_CTRL_VAL,Sendata, len);
-		
+	if(0xf3 == param->packet[0])
+	{
+		// sprintf成功，则返回写入的字符总数
+		uint8 len = sprintf((char*)Sendata, "ch2:%.3f;ch3:%.2f;ch5:%.2f", 
+							adc_convert_temperature(),
+							mcu_adc_get_voltage(MCU_P13_ADC_CH3),
+							mcu_adc_get_voltage(MCU_P15_ADC_CH5));
+		app_proj_template_send_value(PROJ_TEMPLATE_IDX_CTRL_VAL,Sendata, len);
+	}	
 //	app_proj_template_send_value(PROJ_TEMPLATE_IDX_CTRL_VAL,Sendata,param->packet_size);
 #endif
 	return (KE_MSG_CONSUMED);

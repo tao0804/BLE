@@ -28,6 +28,8 @@ void proj_template_ini(void)
     proj_template_get_flash_cmd();
 }
 
+
+// 广播数据的修改
 void proj_template_start_advertising(void)
 {				
 	struct gapm_start_advertise_cmd msg;
@@ -36,8 +38,8 @@ void proj_template_start_advertising(void)
 
 	msg.op.code	 = GAPM_ADV_UNDIRECT;
 	msg.op.addr_src = GAPM_STATIC_ADDR;
-	msg.intv_min	 =	160;			//APP_ADV_INT_MIN;				
-	msg.intv_max	 =	160;			//100ms
+	msg.intv_min	 =	1600;			//APP_ADV_INT_MIN;	连接间隔min和max一致，给它改成1000ms			
+	msg.intv_max	 =	1600;			//1000ms,msg.intv_max=160;100ms
 	msg.channel_map = APP_ADV_CHMAP;
 
 	msg.info.host.mode = GAP_GEN_DISCOVERABLE;

@@ -32,6 +32,7 @@
 #include "app_flash.h"
 #include "dbg_sys.h"
 #include "stack_svc_api.h"
+#include "temperature.h"
 
 #if (USER_PROJ_TEMPLATE)
 #include "proj_template.h"
@@ -91,7 +92,8 @@ void ble_normal_reset_init()
 {
     sys_clear_global_var();
     periph_init();
-	
+	temp_relate_init();	// 上电时初始化温度相关全局变量
+
 	printf("CPU @ %dHz,%s\n", SystemCoreClock, app_info.co_default_bdname);
 	#if(PROJ_OTA)
 	bootloader_start();
@@ -164,7 +166,7 @@ void ble_stack_process()
             // Checks for sleep have to be done with interrupt disabled
             GLOBAL_INT_RESTORE();
         }
-		// mcu_adc_main();
+		mcu_adc_main();
     }
 }
 
@@ -183,17 +185,11 @@ void ble_init(void)
     }
 }
 
-void user_init(void)
-{
-	mcu_gpio_user_init();
-	mcu_adc_user_init();
-}
 
 int main(void)
 {
 	stack_sp_restore();
     ble_init();
-	mcu_gpio_user_init();
     ble_stack_process();
 }
 

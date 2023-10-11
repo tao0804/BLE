@@ -28,6 +28,7 @@ static struct app_proj_template_env_tag app_proj_template_env;
 void app_proj_template_init(void)
 {
 	memset(&app_proj_template_env, 0, sizeof(app_proj_template_env));
+	temp_relate_init();
 }
 
 
@@ -107,18 +108,20 @@ static int proj_template_server_peer_write_data_ind_handler(ke_msg_id_t const ms
 #if 0
     printf("recv %d\n", param->packet_size);
 #else
-	uint8_t Sendata[PROJ_TEMPLATE_SERVER_PACKET_SIZE] = {0};
+	// uint8_t Sendata[PROJ_TEMPLATE_SERVER_PACKET_SIZE] = {0};
+	uint16 tCnt;
+	int8 actTemp;
 	show_reg3(param->packet,param->packet_size);
 	if(0xf3 == param->packet[0])
 	{
-		// sprintf成功，则返回写入的字符总数
-		uint8 len = sprintf((char*)Sendata, "ch2:%.3f;ch3:%.2f;ch5:%.2f", 
-							adc_convert_temperature(),
-							mcu_adc_get_voltage(MCU_P13_ADC_CH3),
-							mcu_adc_get_voltage(MCU_P15_ADC_CH5));
-		app_proj_template_send_value(PROJ_TEMPLATE_IDX_CTRL_VAL,Sendata, len);
+		// sprintf成功,则返回写入的字符总数
+		int8 len = temp_temporary_sampling();
+		tCnt = current_sampling_tempcnt();	
+		actTemp = temp_get_tempValue(tCnt + 1);	
+		// app_proj_template_send_value(PROJ_TEMPLATE_IDX_CTRL_VAL,Sendata, len);
 	}	
-//	app_proj_template_send_value(PROJ_TEMPLATE_IDX_CTRL_VAL,Sendata,param->packet_size);
+	// app_proj_template_send_value(PROJ_TEMPLATE_IDX_CTRL_VAL,Sendata,param->packet_size);
+
 #endif
 	return (KE_MSG_CONSUMED);
 }

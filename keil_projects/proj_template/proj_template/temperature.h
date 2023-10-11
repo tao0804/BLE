@@ -2,15 +2,41 @@
 #define _TEMPERATURE_H_
 #include "panble.h"
 
-#define TEMPVALUE_ARRAY_NUM 500
-#define STANDARD_TEMPERATURE 37
+// TemperTable数组大小
+#define TEMP_TABLE_MAX_LEN		500
+// TemperValue 0值温度 （摄氏度）
+#define ZERO_TEMP_VALUE_C			37.0f
+// TemperValue 精度 （摄氏度）
+#define PRECISION_TEMP_VALUE_C	0.05f
+// TemperValue 转 真实温度 （摄氏度）
+#define TEMP_VALUE_TO_C(value)  (ZERO_TEMP_VALUE_C + value * PRECISION_TEMP_VALUE_C)
+
+#pragma pack(1)
+
+typedef struct TemperCfg
+{
+	uint16 zeroTemperValue;
+	uint16 precisionTemperValue;
+	uint16 temperTableMaxLen;
+	uint8 sampleTemperPeriod;
+}TemperCfg_t;
+
+typedef struct TemperReadCfg
+{
+	uint16 startCnt;	// 从第几次采样开始读取
+	uint16 readLen;		// 读取的长度
+}TemperReadCfg_t;
+
+#define  TEMP_SAMPLING_PERIOD  15
 
 void user_init(void);
-float adc_convert_temperature(void);
-int8 actTemperature_convert_tempValue(float tempreture_ntc1);
+void temp_relate_init(void);
+int8 adcVoltage_convert_temp(float voltage);
+int8 actTemp_to_tempValue(float temp);
+void temp_history_tempValue(int8 tempvalue);
+int8 temp_get_tempValue(uint16 cnt);
 uint16 current_sampling_tempcnt(void);
-void tempValue_historyRecord(void);
-void temperature_relate_init(void);
-
+int8 temp_temporary_sampling(void);
+void temp_sampleTimerCb(void);
 
 #endif

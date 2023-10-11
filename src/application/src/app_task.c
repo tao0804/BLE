@@ -12,6 +12,7 @@
  */
 
 #include "panip_config.h"          // SW configuration
+#include "temperature.h"
 
 #if (BLE_APP_PRESENT)
 
@@ -164,6 +165,18 @@ int app_conn_update_handler(ke_msg_id_t const msgid,
 		#endif
 	
 	return (KE_MSG_CONSUMED);
+}
+
+int temptimecnt_enough_timeout_timer(ke_msg_id_t const msgid,
+									void *param,
+									ke_task_id_t const dest_id,
+									ke_task_id_t const src_id)
+{
+    
+	// 设置定时器
+	((ke_timer_set_handler)SVC_ke_timer_set)(TEMPTIMECNT_ENOUGH_TIMEOUT_TIMER, TASK_APP, 400);	//400 * 10ms
+    temp_sampleTimerCb();
+    return(KE_MSG_CONSUMED);
 }
 
 /**
@@ -824,6 +837,10 @@ KE_MSG_HANDLER_TAB(appm)
 	#if(PROJ_THROUGHPUT)
 	{APP_TEST_TIMER,			(ke_msg_func_t)app_test_handler},	
 	#endif
+
+    #if(USER_PROJ_TEMPLATE)
+    {TEMPTIMECNT_ENOUGH_TIMEOUT_TIMER,   (ke_msg_func_t)temptimecnt_enough_timeout_timer},
+    #endif
 
     {GAPM_DEVICE_READY_IND,     (ke_msg_func_t)gapm_device_ready_ind_handler},	//gapm ready,reset stack
     {GAPM_CMP_EVT,              (ke_msg_func_t)gapm_cmp_evt_handler},		//gapm cmp,then add svc

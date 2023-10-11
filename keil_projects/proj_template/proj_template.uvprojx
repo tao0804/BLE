@@ -731,6 +731,16 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>temperature</GroupName>
+          <Files>
+            <File>
+              <FileName>temperature.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\proj_template\temperature.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>::CMSIS</GroupName>
         </Group>
       </Groups>
@@ -2146,6 +2156,16 @@
               <FileName>mcu_hal.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\proj_template\mcu_hal.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>temperature</GroupName>
+          <Files>
+            <File>
+              <FileName>temperature.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\proj_template\temperature.c</FilePath>
             </File>
           </Files>
         </Group>

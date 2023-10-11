@@ -79,8 +79,12 @@ enum appm_msg
     
 	#if (PROJ_THROUGHPUT)
 	APP_TEST_TIMER,
-	
     #endif
+
+    #if(USER_PROJ_TEMPLATE)
+    TEMPTIMECNT_ENOUGH_TIMEOUT_TIMER, 
+    #endif
+
     #if (BLE_APP_HT)
     /// Timer used to refresh the temperature measurement value
     APP_HT_MEAS_INTV_TIMER,

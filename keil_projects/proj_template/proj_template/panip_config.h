@@ -24,7 +24,7 @@
 #define ENABLE_UART0			(0)
 #define ENABLE_UART1			(1)
 #define USE_EXT_32K 	        (0) //macro of use external 32k 		
-#define SLEEP_EN		        (1) //maro of whether to use (1)low power or (0)not
+#define SLEEP_EN		        (0) //maro of whether to use (1)low power or (0)not
 #define PN102B			        (1)
 #define SET_CUSTOME_ADDR		(1)
 #if(SLEEP_EN == 1)

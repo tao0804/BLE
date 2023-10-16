@@ -110,17 +110,35 @@ static int proj_template_server_peer_write_data_ind_handler(ke_msg_id_t const ms
 #if 0
     printf("recv %d\n", param->packet_size);
 #else
-	// uint8_t Sendata[PROJ_TEMPLATE_SERVER_PACKET_SIZE] = {0};
+	uint8_t Sendata[PROJ_TEMPLATE_SERVER_PACKET_SIZE] = {0};
 	show_reg3(param->packet,param->packet_size);
+	// if(0xf3 == param->packet[0])
+	// {
+	// 	int8 t = temp_temporary_sampling();
+	// 	printf("int8:0x%x,temp:%.2f", t, TEMP_VALUE_TO_C(t));
+	// 	// sprintf成功,则返回写入的字符总数
+	// 	// uint8 len = sprintf((char*)Sendata, "ch2:%02X", temp_temporary_sampling());
+	// 	// app_proj_template_send_value(PROJ_TEMPLATE_IDX_CTRL_VAL,Sendata, len);
+	// }
+
 	if(0xf3 == param->packet[0])
-	{
-		int8 t = temp_temporary_sampling();
-		printf("int8:0x%x,temp:%.2f", t, TEMP_VALUE_TO_C(t));
-		// sprintf成功,则返回写入的字符总数
-		// uint8 len = sprintf((char*)Sendata, "ch2:%02X", temp_temporary_sampling());
-		// app_proj_template_send_value(PROJ_TEMPLATE_IDX_CTRL_VAL,Sendata, len);
+	{// 阻塞采一次，返回当前温度
+		float temp = TEMP_VALUE_TO_C(temp_get_tempValue(current_sampling_tempcnt()));
+		uint8 len = sprintf((char*)Sendata, "temp = %.2f", temp);
+		app_proj_template_send_value(PROJ_TEMPLATE_IDX_CTRL_VAL, Sendata, len);
 	}
-	// app_proj_template_send_value(PROJ_TEMPLATE_IDX_CTRL_VAL,Sendata,param->packet_size);
+	else if(0xf4 == param->packet[0])
+	{// 返回已经采样次数
+		uint16 tempcnt = current_sampling_tempcnt();
+		uint8 len = sprintf((char*)Sendata, "tempcnt = %02X", tempcnt);
+		app_proj_template_send_value(PROJ_TEMPLATE_IDX_CTRL_VAL, Sendata, len);
+	}
+	else if(0xf5 == param->packet[0] && param->packet_size == 3)
+	{// 0x0100, 0200
+		float temp = TEMP_VALUE_TO_C(temp_get_tempValue(param->packet[1]));
+		uint8 len = sprintf((char*)Sendata, "res of %d = %.2f", param->packet[1], temp);
+		app_proj_template_send_value(PROJ_TEMPLATE_IDX_CTRL_VAL, Sendata, len);
+	}
 
 #endif
 	return (KE_MSG_CONSUMED);

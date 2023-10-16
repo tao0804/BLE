@@ -23,10 +23,12 @@ void user_init(void)
 // 初始化全局变量
 void temp_relate_init(void)
 {
+	int8 t;
 	memset(tempTable, 0, sizeof(tempTable));
 	tempCnt = 0;
 	tempTimeCnt = 0;
-	temp_temporary_sampling();
+	t = temp_temporary_sampling();
+	temp_history_tempValue(t);
 }
 
 //ntc B值,NCP15WF104F03RC 4250-4299 B特征值

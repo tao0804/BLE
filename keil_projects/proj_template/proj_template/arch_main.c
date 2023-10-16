@@ -92,7 +92,6 @@ void ble_normal_reset_init()
 {
     sys_clear_global_var();
     periph_init();
-	temp_relate_init();	// 上电时初始化温度相关全局变量
 
 	printf("CPU @ %dHz,%s\n", SystemCoreClock, app_info.co_default_bdname);
 	#if(PROJ_OTA)
@@ -166,7 +165,7 @@ void ble_stack_process()
             // Checks for sleep have to be done with interrupt disabled
             GLOBAL_INT_RESTORE();
         }
-		mcu_adc_main();
+//		mcu_adc_main();
     }
 }
 

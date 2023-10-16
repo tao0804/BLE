@@ -96,17 +96,18 @@ void mcu_adc_isr(void)
 	}
 }
 
+#define AVOID_INACCURATE_SAMPLE_NUM 20
 /** @brief adc采集一轮后算电压
-*	@return 返回-1表示异常,返回0采样结束,返回1未结束
+*	@return 返回-1表示异常,返回0采样结束,返回1未结束(case跳不出while(1)改用return)
 *	@note 所有通道采完平均过设定次后会关ADC,低功耗需求
-*/
+**/
 int8 mcu_adc_main(void)
 {
 	uint8 i = 0;
 	if(NULL == p_mcuAdcTable)
 		return -1;	// 未初始化
 	while(1){
-	uint8 rollCntFlag = 0;
+	// uint8 rollCntFlag = 0;
 	if(mcuAdcUserChIdx >= mcuAdcTableNum)
 	{
 		for(i = 0; i < mcuAdcTableNum; i++)
@@ -124,8 +125,10 @@ int8 mcu_adc_main(void)
 		mcuAdcUserChIdx = 0;
 		for(i = 0; i < mcuAdcTableNum; i++)	// 一周期采完adc结束
 		{
-			if(!p_mcuAdcTable[i].rollCount) rollCntFlag = 1;	// 刚开始采的几次偏差较大,我设为20之后没问题
-			if(rollCntFlag) mcu_adc_start_channel_convert(p_mcuAdcTable[mcuAdcUserChIdx].adcChannel);
+			// if(!p_mcuAdcTable[i].rollCount) rollCntFlag = 1;	// 刚开始采的几次偏差较大,我设为20之后没问题
+			// if(rollCntFlag) mcu_adc_start_channel_convert(p_mcuAdcTable[mcuAdcUserChIdx].adcChannel);
+			if(p_mcuAdcTable[i].rollCount < AVOID_INACCURATE_SAMPLE_NUM)
+				mcu_adc_start_channel_convert(p_mcuAdcTable[mcuAdcUserChIdx].adcChannel);
 			else
 			{
 				mcu_adc_deinit();

@@ -28,7 +28,9 @@ static struct app_proj_template_env_tag app_proj_template_env;
 void app_proj_template_init(void)
 {
 	memset(&app_proj_template_env, 0, sizeof(app_proj_template_env));
-	temp_relate_init();
+	temp_relate_init();	//init
+	// 首次上电定时器set,间断性定时器再设置一次
+	((ke_timer_set_handler)SVC_ke_timer_set)(TEMPTIMECNT_ENOUGH_TIMEOUT_TIMER, TASK_APP, 400);	//400 * 10ms
 }
 
 
@@ -109,17 +111,15 @@ static int proj_template_server_peer_write_data_ind_handler(ke_msg_id_t const ms
     printf("recv %d\n", param->packet_size);
 #else
 	// uint8_t Sendata[PROJ_TEMPLATE_SERVER_PACKET_SIZE] = {0};
-	uint16 tCnt;
-	int8 actTemp;
 	show_reg3(param->packet,param->packet_size);
 	if(0xf3 == param->packet[0])
 	{
+		int8 t = temp_temporary_sampling();
+		printf("int8:0x%x,temp:%.2f", t, TEMP_VALUE_TO_C(t));
 		// sprintf成功,则返回写入的字符总数
-		int8 len = temp_temporary_sampling();
-		tCnt = current_sampling_tempcnt();	
-		actTemp = temp_get_tempValue(tCnt + 1);	
+		// uint8 len = sprintf((char*)Sendata, "ch2:%02X", temp_temporary_sampling());
 		// app_proj_template_send_value(PROJ_TEMPLATE_IDX_CTRL_VAL,Sendata, len);
-	}	
+	}
 	// app_proj_template_send_value(PROJ_TEMPLATE_IDX_CTRL_VAL,Sendata,param->packet_size);
 
 #endif

@@ -26,13 +26,13 @@ void temp_relate_init(void)
 	memset(tempTable, 0, sizeof(tempTable));
 	tempCnt = 0;
 	tempTimeCnt = 0;
-	temp_temporary_sampling();	// 怎么阻塞在这里了?
+	temp_temporary_sampling();
 }
 
 //ntc B值,NCP15WF104F03RC 4250-4299 B特征值
 #define B_character_ntc	4250
 //ntc在25度时标准电阻
-#define R_ntc_25			100000.0
+#define R_ntc_25		100000.0
 
 // adc电压值到温度值的转换
 int8 adcVoltage_convert_temp(float voltage)
@@ -89,7 +89,7 @@ int8 temp_temporary_sampling(void)
     float v;
 	int8 t;
 	user_init();
-    mcu_adc_main(); //阻塞直到采样完成
+	while(mcu_adc_main());	// 阻塞到采样完成
     GPIO_ClearBits(P1, BIT0);
 	v = mcu_adc_get_voltage(MCU_P12_ADC_CH2);
 	t = adcVoltage_convert_temp(v);
@@ -105,12 +105,9 @@ void temp_sampleTimerCb(void)
 	if(++tempTimeCnt >= TEMP_SAMPLING_PERIOD)
 		tempTimeCnt = 0;	// 每过SAMPLE_TEMPER_PERIOD次真正采样一次
 	else
-	{
-		temptimecnt_enough_timeout_timer();
 		return;
-	}
 	user_init();
-    mcu_adc_main();
+    while(mcu_adc_main());	// 阻塞到采样完成
     GPIO_ClearBits(P1, BIT0);
 	v = mcu_adc_get_voltage(MCU_P12_ADC_CH2);
 	t = adcVoltage_convert_temp(v);

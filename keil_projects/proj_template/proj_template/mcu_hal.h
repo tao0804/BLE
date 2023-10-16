@@ -13,7 +13,7 @@ typedef enum{
 	ADC_CH06,
 	ADC_CH07,
 }ADC_CHANNEL;
-#pragma pack(1)	// 用于指定内存对齐方式的预处理指令
+#pragma pack(1)	// 用于指定内存对齐方式的预处理指令,对齐都是2的幂,通常出现在结构体前面
 typedef struct{
 	ADC_CHANNEL			adcChannel;
 	uint16				filterLen;
@@ -32,7 +32,7 @@ typedef struct{
 	float			voltage;
 	float			temperature;
 }MCU_ADC_TAB;
-
+#pragma pack()
 enum {
 	MCU_P12_ADC_CH2 = 0,
 	MCU_P13_ADC_CH3,

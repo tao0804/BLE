@@ -23,8 +23,8 @@ enum
     TRX_SVC_UUID        = 0xFFF0,
     TRX_CHAR_S2C_UUID   = 0xFFF1,
     TRX_CHAR_C2S_UUID   = 0xFFF2,
-    TRX_CHAR_CTRL_UUID  = 0xFFF3,
-    TRX_CHAR_ENCPT_UUID = 0xFFF4,
+    // TRX_CHAR_CTRL_UUID  = 0xFFF3,
+    // TRX_CHAR_ENCPT_UUID = 0xFFF4,
 };
 
 //attibute idex
@@ -39,10 +39,10 @@ enum
     PROJ_TEMPLATE_IDX_C2S_CHAR, 
     PROJ_TEMPLATE_IDX_C2S_VAL, 
     PROJ_TEMPLATE_IDX_C2S_USER_DESC, 
-    PROJ_TEMPLATE_IDX_CTRL_CHAR, 
-    PROJ_TEMPLATE_IDX_CTRL_VAL, 
-    PROJ_TEMPLATE_IDX_CTRL_USER_DESC,
-    PROJ_TEMPLATE_IDX_CTRL_CLIENT_CFG,
+    // PROJ_TEMPLATE_IDX_CTRL_CHAR, 
+    // PROJ_TEMPLATE_IDX_CTRL_VAL, 
+    // PROJ_TEMPLATE_IDX_CTRL_USER_DESC,
+    // PROJ_TEMPLATE_IDX_CTRL_CLIENT_CFG,
     PROJ_TEMPLATE_IDX_NB,
 };
 
@@ -52,9 +52,9 @@ enum
 #define PROJ_TEMPLATE_S2C_CLIENT_CFG_LEN        sizeof(uint16_t)
 #define PROJ_TEMPLATE_C2S_USER_DESC_VAL         "Client To Server"
 #define PROJ_TEMPLATE_C2S_USER_DESC_VAL_LEN     sizeof(PROJ_TEMPLATE_C2S_USER_DESC_VAL)
-#define PROJ_TEMPLATE_CTRL_USER_DESC_VAL        "Control"
-#define PROJ_TEMPLATE_CTRL_USER_DESC_VAL_LEN    sizeof(PROJ_TEMPLATE_CTRL_USER_DESC_VAL)
-#define PROJ_TEMPLATE_CTRL_CLIENT_CFG_LEN       sizeof(uint16_t)
+// #define PROJ_TEMPLATE_CTRL_USER_DESC_VAL        "Control"
+// #define PROJ_TEMPLATE_CTRL_USER_DESC_VAL_LEN    sizeof(PROJ_TEMPLATE_CTRL_USER_DESC_VAL)
+// #define PROJ_TEMPLATE_CTRL_CLIENT_CFG_LEN       sizeof(uint16_t)
 
 
 /*
@@ -72,7 +72,7 @@ struct proj_template_server_env_tag
     uint16_t   start_hdl;
     ke_state_t state[PROJ_TEMPLATE_SERVER_IDX_MAX];
     uint16_t   client_cfg_s2c[BLE_CONNECTION_MAX];
-    uint16_t   client_cfg_ctrl[BLE_CONNECTION_MAX];
+    // uint16_t   client_cfg_ctrl[BLE_CONNECTION_MAX];
 };
 
 extern struct proj_template_server_env_tag proj_template_server_env;

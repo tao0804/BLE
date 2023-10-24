@@ -25,10 +25,10 @@ const struct attm_desc proj_template_server_att_db[PROJ_TEMPLATE_IDX_NB] =
     [PROJ_TEMPLATE_IDX_C2S_VAL]         = { TRX_CHAR_C2S_UUID, PERM(WRITE_COMMAND, ENABLE), PERM(RI, ENABLE), PROJ_TEMPLATE_SERVER_PACKET_SIZE },    
     [PROJ_TEMPLATE_IDX_C2S_USER_DESC]   = { ATT_DESC_CHAR_USER_DESCRIPTION, PERM(RD, ENABLE)|PERM(SVC_EKS, ENABLE), PERM(RI, ENABLE), PROJ_TEMPLATE_C2S_USER_DESC_VAL_LEN },
     
-    [PROJ_TEMPLATE_IDX_CTRL_CHAR]       = { ATT_DECL_CHARACTERISTIC, PERM(RD, ENABLE), 0, 0 },
-    [PROJ_TEMPLATE_IDX_CTRL_VAL]        = { TRX_CHAR_CTRL_UUID, PERM(WRITE_REQ, ENABLE) | PERM(NTF, ENABLE), PERM(RI, ENABLE), PROJ_TEMPLATE_SERVER_PACKET_SIZE },    
-    [PROJ_TEMPLATE_IDX_CTRL_USER_DESC]  = { ATT_DESC_CHAR_USER_DESCRIPTION, PERM(RD, ENABLE), PERM(RI, ENABLE), PROJ_TEMPLATE_CTRL_USER_DESC_VAL_LEN },
-    [PROJ_TEMPLATE_IDX_CTRL_CLIENT_CFG]  = { ATT_DESC_CLIENT_CHAR_CFG, PERM(RD, ENABLE) | PERM(WRITE_REQ, ENABLE), 0, 0 },
+    // [PROJ_TEMPLATE_IDX_CTRL_CHAR]       = { ATT_DECL_CHARACTERISTIC, PERM(RD, ENABLE), 0, 0 },
+    // [PROJ_TEMPLATE_IDX_CTRL_VAL]        = { TRX_CHAR_CTRL_UUID, PERM(WRITE_REQ, ENABLE) | PERM(NTF, ENABLE), PERM(RI, ENABLE), PROJ_TEMPLATE_SERVER_PACKET_SIZE },    
+    // [PROJ_TEMPLATE_IDX_CTRL_USER_DESC]  = { ATT_DESC_CHAR_USER_DESCRIPTION, PERM(RD, ENABLE), PERM(RI, ENABLE), PROJ_TEMPLATE_CTRL_USER_DESC_VAL_LEN },
+    // [PROJ_TEMPLATE_IDX_CTRL_CLIENT_CFG]  = { ATT_DESC_CLIENT_CHAR_CFG, PERM(RD, ENABLE) | PERM(WRITE_REQ, ENABLE), 0, 0 },
 };
 
 
@@ -110,7 +110,7 @@ static void proj_template_server_create(struct prf_task_env* env, uint8_t conidx
     struct proj_template_server_env_tag* proj_template_server_env = (struct proj_template_server_env_tag*) env->env;
     ASSERT_ERR(conidx < BLE_CONNECTION_MAX);
     proj_template_server_env->client_cfg_s2c[conidx]  = PRF_CLI_STOP_NTFIND;
-    proj_template_server_env->client_cfg_ctrl[conidx] = PRF_CLI_STOP_NTFIND;
+    // proj_template_server_env->client_cfg_ctrl[conidx] = PRF_CLI_STOP_NTFIND;
 }
 
 /**
@@ -129,7 +129,7 @@ static void proj_template_server_cleanup(struct prf_task_env* env, uint8_t conid
     ASSERT_ERR(conidx < BLE_CONNECTION_MAX);
     // force notification config to zero when peer device is disconnected
     proj_template_server_env->client_cfg_s2c[conidx]  = PRF_CLI_STOP_NTFIND;
-    proj_template_server_env->client_cfg_ctrl[conidx] = PRF_CLI_STOP_NTFIND;
+    // proj_template_server_env->client_cfg_ctrl[conidx] = PRF_CLI_STOP_NTFIND;
 }
 
 /// BASS Task interface required by profile manager

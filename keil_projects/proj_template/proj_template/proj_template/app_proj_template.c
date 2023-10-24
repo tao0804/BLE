@@ -52,8 +52,9 @@ void app_proj_template_add_server(void)
 	req->start_hdl	 = 0;
 
 	// Set parameters
-	db_cfg = (struct proj_template_server_db_cfg* ) req->param;
-	db_cfg->features = 0x1fff;
+	db_cfg = (struct proj_template_server_db_cfg* ) req->param;	// 把db_cfg结构体指针指向param数组
+	db_cfg->features = 0x1fff;	// 13位均为1，features 32位		// 给结构体成员features赋值
+
 
 	// Send the message
 	((ke_msg_send_handler)SVC_ke_msg_send)(req);
@@ -125,19 +126,19 @@ static int proj_template_server_peer_write_data_ind_handler(ke_msg_id_t const ms
 	{// 阻塞采一次，返回当前温度
 		float temp = TEMP_VALUE_TO_C(temp_get_tempValue(current_sampling_tempcnt()));
 		uint8 len = sprintf((char*)Sendata, "temp = %.2f", temp);
-		app_proj_template_send_value(PROJ_TEMPLATE_IDX_CTRL_VAL, Sendata, len);
+		app_proj_template_send_value(PROJ_TEMPLATE_IDX_S2C_VAL, Sendata, len);
 	}
 	else if(0xf4 == param->packet[0])
 	{// 返回已经采样次数
 		uint16 tempcnt = current_sampling_tempcnt();
 		uint8 len = sprintf((char*)Sendata, "tempcnt = %02X", tempcnt);
-		app_proj_template_send_value(PROJ_TEMPLATE_IDX_CTRL_VAL, Sendata, len);
+		app_proj_template_send_value(PROJ_TEMPLATE_IDX_S2C_VAL, Sendata, len);
 	}
 	else if(0xf5 == param->packet[0] && param->packet_size == 3)
 	{// 0x0100, 0200
 		float temp = TEMP_VALUE_TO_C(temp_get_tempValue(param->packet[1]));
 		uint8 len = sprintf((char*)Sendata, "res of %d = %.2f", param->packet[1], temp);
-		app_proj_template_send_value(PROJ_TEMPLATE_IDX_CTRL_VAL, Sendata, len);
+		app_proj_template_send_value(PROJ_TEMPLATE_IDX_S2C_VAL, Sendata, len);
 	}
 
 #endif

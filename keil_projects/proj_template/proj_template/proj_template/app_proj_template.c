@@ -53,8 +53,8 @@ void app_proj_template_add_server(void)
 
 	// Set parameters
 	db_cfg = (struct proj_template_server_db_cfg* ) req->param;	// 把db_cfg结构体指针指向param数组
-	db_cfg->features = 0x1fff;	// 13位均为1，features 32位		// 给结构体成员features赋值
-
+	// db_cfg->features = 0x1fff;
+	db_cfg->features = 0xffffffff;	// 给结构体成员features赋值,13位1,超出13的被挤掉了
 
 	// Send the message
 	((ke_msg_send_handler)SVC_ke_msg_send)(req);

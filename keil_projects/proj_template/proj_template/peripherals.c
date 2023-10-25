@@ -81,8 +81,9 @@ void UART0_Handler(void)
 			   (USART_RX_CNT >= USART_REC_LEN))
 			{
 				if((USART_RX_CNT >1) && (sys_ble_conn_flag == 1))
-				{
-					app_proj_template_send_value(PROJ_TEMPLATE_IDX_C2S_VAL,USART_RX_BUF,USART_RX_CNT);
+				{//修复：串口接收后蓝牙不发问题,蓝牙发C2S
+					app_proj_template_send_value(PROJ_TEMPLATE_IDX_S2C_VAL,USART_RX_BUF,USART_RX_CNT);
+					// app_proj_template_send_value(PROJ_TEMPLATE_IDX_C2S_VAL,USART_RX_BUF,USART_RX_CNT);
 				}
 				USART_RX_CNT = 0;
 			}

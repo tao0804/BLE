@@ -14,22 +14,24 @@
 // 用于指定内存对齐方式的预处理指令,通常出现在结构体前面
 #pragma pack(1)
 
-typedef struct TemperCfg
+typedef struct TempCfg
 {
-	uint16 zeroTemperValue;
-	uint16 precisionTemperValue;
-	uint16 temperTableMaxLen;
-	uint8 sampleTemperPeriod;
-}TemperCfg_t;
+	uint16 zeroTempValue;
+	uint16 precisionTempValue;
+	uint16 tempTableMaxLen;
+	uint8 sampleTempPeriod;
+}TempCfg_t;
 
-typedef struct TemperReadCfg
+typedef struct TempReadCfg
 {
 	uint16 startCnt;	// 从第几次采样开始读取
 	uint16 readLen;		// 读取的长度
-}TemperReadCfg_t;
-
+}TempReadCfg_t;
 //恢复默认对齐方式,否则影响后面代码对齐方式.[调试出现app error、stack error]
 #pragma pack()
+
+extern const TempCfg_t g_TempCfg;
+extern TempReadCfg_t g_TempReadCfg;
 
 #define  TEMP_SAMPLING_PERIOD  15
 

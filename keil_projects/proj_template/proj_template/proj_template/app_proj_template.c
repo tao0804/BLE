@@ -123,7 +123,7 @@ static int proj_template_server_peer_write_data_ind_handler(ke_msg_id_t const ms
 	// }
 
 	if(0xf3 == param->packet[0])
-	{// 阻塞采一次，返回当前温度
+	{// 阻塞采一次,返回当前温度
 		float temp = TEMP_VALUE_TO_C(temp_get_tempValue(current_sampling_tempcnt()));
 		uint8 len = sprintf((char*)Sendata, "temp = %.2f", temp);
 		app_proj_template_send_value(PROJ_TEMPLATE_IDX_S2C_VAL, Sendata, len);

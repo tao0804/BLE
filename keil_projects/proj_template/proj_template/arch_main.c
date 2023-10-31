@@ -33,6 +33,7 @@
 #include "dbg_sys.h"
 #include "stack_svc_api.h"
 #include "temperature.h"
+#include "mcu_hal.h"
 
 #if (USER_PROJ_TEMPLATE)
 #include "proj_template.h"
@@ -42,8 +43,6 @@
 #include "ota_server_task.h"
 #include "ota_server.h"
 #endif
-
-#include "mcu_hal.h"
 
 const app_info_t app_info __attribute__((at(APP_INFO_ADDR)))=
 {
@@ -56,7 +55,7 @@ const app_info_t app_info __attribute__((at(APP_INFO_ADDR)))=
 };
 
 //wakeup init
-// 唤醒之后 mcu 处理 RF 的 tx、rx 收发数据等其他外设工作。当所有事情处理完后又进入休眠状态
+// 唤醒之后mcu处理RF的tx,rx收发数据,等其他外设工作当所有事情处理完后又进入休眠状态
 void ble_sleep_wakeup_init()
 {
 	periph_init();																//System peripheral initialization
@@ -140,8 +139,8 @@ void ble_stack_process()
 		#endif
 		
 		// 进入低功耗
-		// 在低功耗下，只有 32k 在工作，mcu 的其他资源都是处于关闭状态。
-		// 休眠的时间等于广播间隔和连接间隔。休眠时间到，mcu 唤醒
+		// 在低功耗下,只有32k在工作,mcu的其他资源都是处于关闭状态。
+		// 休眠的时间等于广播间隔和连接间隔.休眠时间到,mcu唤醒
         if (app_var.default_sleep_en)
         {
             GLOBAL_INT_DISABLE();
@@ -165,11 +164,8 @@ void ble_stack_process()
             // Checks for sleep have to be done with interrupt disabled
             GLOBAL_INT_RESTORE();
         }
-//		mcu_adc_main();
     }
 }
-
-
 
 //system init
 void ble_init(void)
@@ -183,7 +179,6 @@ void ble_init(void)
         ble_normal_reset_init();
     }
 }
-
 
 int main(void)
 {

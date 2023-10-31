@@ -14,6 +14,15 @@ int8 tempTable[TEMP_TABLE_MAX_LEN];
 uint16 tempCnt;
 uint8 tempTimeCnt;
 
+const TempCfg_t g_TempCfg = {
+	.zeroTempValue = ZERO_TEMP_VALUE_C * 1000,
+	.precisionTempValue = PRECISION_TEMP_VALUE_C * 1000,
+	.tempTableMaxLen = TEMP_TABLE_MAX_LEN,
+	.sampleTempPeriod = TEMP_SAMPLING_PERIOD,
+};
+
+TempReadCfg_t g_TempReadCfg;
+
 void user_init(void)
 {
 	mcu_gpio_user_init();
@@ -24,6 +33,7 @@ void user_init(void)
 void temp_relate_init(void)
 {
 	int8 t;
+	memset(&g_TempReadCfg, 0, sizeof(g_TempReadCfg));
 	memset(tempTable, 0, sizeof(tempTable));
 	tempCnt = 0;
 	tempTimeCnt = 0;

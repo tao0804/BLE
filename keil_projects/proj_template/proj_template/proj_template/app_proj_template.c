@@ -30,7 +30,7 @@ void app_proj_template_init(void)
 	memset(&app_proj_template_env, 0, sizeof(app_proj_template_env));
 	temp_relate_init();	//init
 	// 首次上电定时器set,间断性定时器再设置一次
-	((ke_timer_set_handler)SVC_ke_timer_set)(TEMPTIMECNT_ENOUGH_TIMEOUT_TIMER, TASK_APP, 400);	//400 * 10ms
+	((ke_timer_set_handler)SVC_ke_timer_set)(TEMPTIMECNT_ENOUGH_TIMEOUT_TIMER, TASK_APP, 6000);	//400 * 10ms
 }
 
 

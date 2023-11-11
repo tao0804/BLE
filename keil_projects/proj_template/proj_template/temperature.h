@@ -33,7 +33,7 @@ typedef struct TempReadCfg
 extern const TempCfg_t g_TempCfg;
 extern TempReadCfg_t g_TempReadCfg;
 
-#define  TEMP_SAMPLING_PERIOD  15
+#define  TEMP_SAMPLING_PERIOD  1
 
 void user_init(void);
 void temp_relate_init(void);

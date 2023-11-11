@@ -184,6 +184,7 @@ int temptimecnt_enough_timeout_timer(ke_msg_id_t const msgid,
 	// 设置定时器
 	((ke_timer_set_handler)SVC_ke_timer_set)(TEMPTIMECNT_ENOUGH_TIMEOUT_TIMER, TASK_APP, 6000);	//400 * 10ms
     temp_sampleTimerCb();
+	
     return(KE_MSG_CONSUMED);
 }
 

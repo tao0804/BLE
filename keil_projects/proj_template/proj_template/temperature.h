@@ -2,16 +2,16 @@
 #define _TEMPERATURE_H_
 #include "panble.h"
 
-// TemperTableæ•°ç»„å¤§å°
+// TemperTableÊı×é´óĞ¡
 #define TEMP_TABLE_MAX_LEN		500
-// TemperValue 0å€¼æ¸©åº¦ ï¼ˆæ‘„æ°åº¦ï¼‰
-#define ZERO_TEMP_VALUE_C			30.0f
-// TemperValue ç²¾åº¦ ï¼ˆæ‘„æ°åº¦ï¼‰
+// TemperValue 0ÖµÎÂ¶È £¨ÉãÊÏ¶È£©
+#define ZERO_TEMP_VALUE_C		30.0f
+// TemperValue ¾«¶È £¨ÉãÊÏ¶È£©
 #define PRECISION_TEMP_VALUE_C	0.05f
-// TemperValue è½¬ çœŸå®æ¸©åº¦ ï¼ˆæ‘„æ°åº¦ï¼‰
+// TemperValue ×ª ÕæÊµÎÂ¶È £¨ÉãÊÏ¶È£©
 #define TEMP_VALUE_TO_C(value)  (ZERO_TEMP_VALUE_C + value * PRECISION_TEMP_VALUE_C)
 
-// ç”¨äºæŒ‡å®šå†…å­˜å¯¹é½æ–¹å¼çš„é¢„å¤„ç†æŒ‡ä»¤,é€šå¸¸å‡ºç°åœ¨ç»“æ„ä½“å‰é¢
+// ÓÃÓÚÖ¸¶¨ÄÚ´æ¶ÔÆë·½Ê½µÄÔ¤´¦ÀíÖ¸Áî,Í¨³£³öÏÖÔÚ½á¹¹ÌåÇ°Ãæ
 #pragma pack(1)
 
 typedef struct TempCfg
@@ -24,10 +24,10 @@ typedef struct TempCfg
 
 typedef struct TempReadCfg
 {
-	uint16 startCnt;	// ä»ç¬¬å‡ æ¬¡é‡‡æ ·å¼€å§‹è¯»å–
-	uint16 readLen;		// è¯»å–çš„é•¿åº¦
+	uint16 startCnt;	// ´ÓµÚ¼¸´Î²ÉÑù¿ªÊ¼¶ÁÈ¡
+	uint16 readLen;		// ¶ÁÈ¡µÄ³¤¶È
 }TempReadCfg_t;
-//æ¢å¤é»˜è®¤å¯¹é½æ–¹å¼,å¦åˆ™å½±å“åé¢ä»£ç å¯¹é½æ–¹å¼.[è°ƒè¯•å‡ºç°app errorã€stack error]
+//»Ö¸´Ä¬ÈÏ¶ÔÆë·½Ê½,·ñÔòÓ°ÏìºóÃæ´úÂë¶ÔÆë·½Ê½.[µ÷ÊÔ³öÏÖapp error¡¢stack error]
 #pragma pack()
 
 extern const TempCfg_t g_TempCfg;

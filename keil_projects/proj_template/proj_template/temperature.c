@@ -29,7 +29,7 @@ void user_init(void)
 	mcu_adc_user_init();
 }
 
-// åˆå§‹åŒ–å…¨å±€å˜é‡
+// ³õÊ¼»¯È«¾Ö±äÁ¿
 void temp_relate_init(void)
 {
 	int8 t;
@@ -41,28 +41,28 @@ void temp_relate_init(void)
 	temp_history_tempValue(t);
 }
 
-//ntc Bå€¼,NCP15WF104F03RC 4250-4299 Bç‰¹å¾å€¼
+//ntc BÖµ,NCP15WF104F03RC 4250-4299 BÌØÕ÷Öµ
 #define B_character_ntc	4250
-//ntcåœ¨25åº¦æ—¶æ ‡å‡†ç”µé˜»
+//ntcÔÚ25¶ÈÊ±±ê×¼µç×è
 #define R_ntc_25		100000.0
 
-// adcç”µå‹å€¼åˆ°æ¸©åº¦å€¼çš„è½¬æ¢
+// adcµçÑ¹Öµµ½ÎÂ¶ÈÖµµÄ×ª»»
 int8 adcVoltage_convert_temp(float voltage)
 {
 	int8 tempValue;
 	float tempreture_ntc1;
-	float NTC1_R;	//æŸæ¸©åº¦æ—¶ntcå®é™…é˜»å€¼
-	NTC1_R = (((6.25 - voltage) / (6.25 + voltage)) * 100000);	// è¿æ”¾åˆ†æé‡‡é›†çš„ç”µå‹ä¸ntcé˜»å€¼å…³ç³»
+	float NTC1_R;	//Ä³ÎÂ¶ÈÊ±ntcÊµ¼Ê×èÖµ
+	NTC1_R = (((6.25 - voltage) / (6.25 + voltage)) * 100000);	// ÔË·Å·ÖÎö²É¼¯µÄµçÑ¹Óëntc×èÖµ¹ØÏµ
 	tempreture_ntc1 = 1.0 / (1.0 / (273.15 + 25) + 1.0 / B_character_ntc * log(NTC1_R / (R_ntc_25))) - 273.15;
 	tempValue = actTemp_to_tempValue(tempreture_ntc1);
 	return tempValue;
 }
 
-// å®é™…æ¸©åº¦å€¼è½¬int8
+// Êµ¼ÊÎÂ¶ÈÖµ×ªint8
 int8 actTemp_to_tempValue(float temp)
 {
 	int32 t;
-	//å¯¹ç»“æœå››èˆäº”å…¥,æ¯”å¯¹åˆå€¼èˆè¿›ä½å†è¿ç®—ç²¾åº¦æ›´é«˜
+	//¶Ô½á¹ûËÄÉáÎåÈë,±È¶Ô³õÖµÉá½øÎ»ÔÙÔËËã¾«¶È¸ü¸ß
 	t = (int32)round((temp - ZERO_TEMP_VALUE_C) / PRECISION_TEMP_VALUE_C);
 	if(t > TEMP_VALUE_OVER_MAX)
 		return TEMP_VALUE_OVER_MAX;
@@ -71,7 +71,7 @@ int8 actTemp_to_tempValue(float temp)
 	return (int8)t;
 }
 
-// ä¿å­˜æ¸©åº¦å€¼åˆ°tempTableï¼ŒåŒæ—¶æ›´æ–°tempCnt
+// ±£´æÎÂ¶ÈÖµµ½tempTable£¬Í¬Ê±¸üĞÂtempCnt
 void temp_history_tempValue(int8 tempvalue)
 {
 	tempTable[tempCnt % TEMP_TABLE_MAX_LEN] = tempvalue;
@@ -79,47 +79,47 @@ void temp_history_tempValue(int8 tempvalue)
 }
 
 #define TEMP_VALUE_ERROR	(-127)
-//è·å–æ¸©åº¦å€¼,cntè¡¨ç¤ºç¬¬å‡ æ¬¡é‡‡æ ·
+//»ñÈ¡ÎÂ¶ÈÖµ,cnt±íÊ¾µÚ¼¸´Î²ÉÑù
 int8 temp_get_tempValue(uint16 cnt)
 {
-	//å½“é‡‡åˆ°505æ¬¡æ—¶,ç¬¬3æ¬¡æ•°æ®å·²è¢«è¦†ç›–
+	//µ±²Éµ½505´ÎÊ±,µÚ3´ÎÊı¾İÒÑ±»¸²¸Ç
 	if(cnt > tempCnt || cnt == 0 || 
 	  (tempCnt > TEMP_TABLE_MAX_LEN && tempCnt - cnt >= TEMP_TABLE_MAX_LEN))
 		return TEMP_VALUE_ERROR;
 	return tempTable[(cnt - 1) % TEMP_TABLE_MAX_LEN];
 }
 
-// é‡‡æ ·å®Œæˆæ¬¡æ•°
+// ²ÉÑùÍê³É´ÎÊı
 uint16 current_sampling_tempcnt(void)
 {
 	return tempCnt;
 }
 
-// é˜»å¡é‡‡ä¸€æ¬¡æ¸©åº¦,ä¸å­˜å‚¨
+// ×èÈû²ÉÒ»´ÎÎÂ¶È,²»´æ´¢
 int8 temp_temporary_sampling(void)
 {
     float v;
 	int8 t;
 	user_init();
-	while(mcu_adc_main());	// é˜»å¡åˆ°é‡‡æ ·å®Œæˆ
+	while(mcu_adc_main());	// ×èÈûµ½²ÉÑùÍê³É
     GPIO_ClearBits(P1, BIT0);
 	v = mcu_adc_get_voltage(MCU_P12_ADC_CH2);
 	t = adcVoltage_convert_temp(v);
 	return t;
 }
 
-// æ¯è°ƒç”¨SAMPLE_TEMPER_PERIODæ¬¡,é˜»å¡é‡‡ä¸€æ¬¡æ¸©åº¦,åå­˜å‚¨
-// å®šæ—¶å™¨å›è°ƒæ¯1minè°ƒä¸€æ¬¡æ­¤æ¥å£
+// Ã¿µ÷ÓÃSAMPLE_TEMPER_PERIOD´Î,×èÈû²ÉÒ»´ÎÎÂ¶È,ºó´æ´¢
+// ¶¨Ê±Æ÷»Øµ÷Ã¿1minµ÷Ò»´Î´Ë½Ó¿Ú
 void temp_sampleTimerCb(void)
 {
 	float v;
 	int8 t;
 	if(++tempTimeCnt >= TEMP_SAMPLING_PERIOD)
-		tempTimeCnt = 0;	// æ¯è¿‡SAMPLE_TEMPER_PERIODæ¬¡çœŸæ­£é‡‡æ ·ä¸€æ¬¡
+		tempTimeCnt = 0;	// Ã¿¹ıSAMPLE_TEMPER_PERIOD´ÎÕæÕı²ÉÑùÒ»´Î
 	else
 		return;
 	user_init();
-    while(mcu_adc_main());	// é˜»å¡åˆ°é‡‡æ ·å®Œæˆ
+    while(mcu_adc_main());	// ×èÈûµ½²ÉÑùÍê³É
     GPIO_ClearBits(P1, BIT0);
 	v = mcu_adc_get_voltage(MCU_P12_ADC_CH2);
 	t = adcVoltage_convert_temp(v);

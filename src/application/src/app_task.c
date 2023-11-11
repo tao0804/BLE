@@ -150,11 +150,18 @@ int app_conn_update_handler(ke_msg_id_t const msgid,
 		appm_update_param(&conn_param);
 		#elif(USER_PROJ_TEMPLATE | PROJ_HID_KEYBOARD | PROJ_HID_SELFIE)
 		struct gapc_conn_param conn_param;
-		conn_param.intv_min = 80;
-		conn_param.intv_max = 80;
-		conn_param.latency	= 0;
+		conn_param.intv_min = 96;
+		conn_param.intv_max = 96;
+		conn_param.latency	= 2;
 		conn_param.time_out = 600;
 		appm_update_param(&conn_param);
+		// #elif(PROJ_TEMPERATURE)
+		// struct gapc_conn_param conn_param;
+		// conn_param.intv_min = 96;
+		// conn_param.intv_max = 96;
+		// conn_param.latency	= 2;
+		// conn_param.time_out = 600;
+		// appm_update_param(&conn_param);
 		#elif(PROJ_MULTIROLE)
 		struct gapc_conn_param conn_param;
 		conn_param.intv_min = 80;
@@ -163,7 +170,8 @@ int app_conn_update_handler(ke_msg_id_t const msgid,
 		conn_param.time_out = 600;
 		appm_update_param(&conn_param);
 		#endif
-	
+
+
 	return (KE_MSG_CONSUMED);
 }
 
@@ -174,7 +182,7 @@ int temptimecnt_enough_timeout_timer(ke_msg_id_t const msgid,
 {
     
 	// 设置定时器
-	((ke_timer_set_handler)SVC_ke_timer_set)(TEMPTIMECNT_ENOUGH_TIMEOUT_TIMER, TASK_APP, 400);	//400 * 10ms
+	((ke_timer_set_handler)SVC_ke_timer_set)(TEMPTIMECNT_ENOUGH_TIMEOUT_TIMER, TASK_APP, 6000);	//400 * 10ms
     temp_sampleTimerCb();
     return(KE_MSG_CONSUMED);
 }

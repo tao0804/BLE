@@ -18,15 +18,16 @@
 #define USER_PROJ_TEMPLATE      (1)
 #define PROJ_OTA                (0) // 给macro置0,原先为1
 
+
 // DSP Log enable
 #define DBG_SYS_EN              (0)
 
 #define ENABLE_UART0			(0)
-#define ENABLE_UART1			(1)
+#define ENABLE_UART1			(0)
 #define USE_EXT_32K 	        (0) //macro of use external 32k 		
 #define SLEEP_EN		        (0) //maro of whether to use (1)low power or (0)not
 #define PN102B			        (1)
-#define SET_CUSTOME_ADDR		(1)
+#define SET_CUSTOME_ADDR		(0)
 #if(SLEEP_EN == 1)
 #define EXT_WAKEUP				(0)	//sleep mode,P52 wakeup
 #else

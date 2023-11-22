@@ -82,7 +82,8 @@ enum appm_msg
     #endif
 
     #if(USER_PROJ_TEMPLATE)
-    TEMPTIMECNT_ENOUGH_TIMEOUT_TIMER, 
+    TEMPTIMECNT_ENOUGH_TIMEOUT_TIMER,
+    MCU_GPIO_LED_TOGGLE_TIMER,
     #endif
 
     #if (BLE_APP_HT)

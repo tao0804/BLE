@@ -50,6 +50,9 @@ extern uint8_t wakeup_cnt;
 extern uint8_t sys_power_flag;
 extern uint8_t sys_sleep_flag;
 extern uint8_t sys_ble_conn_flag;
+
+extern uint8_t sys_first_ble_conn_flag;	// yu code
+
 extern uint16_t USART_RX_CNT;
 extern uint8_t  USART_RX_BUF[USART_REC_LEN];
 

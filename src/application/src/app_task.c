@@ -13,6 +13,7 @@
 
 #include "panip_config.h"          // SW configuration
 #include "temperature.h"
+#include "mcu_hal.h"
 
 #if (BLE_APP_PRESENT)
 
@@ -183,9 +184,22 @@ int temptimecnt_enough_timeout_timer(ke_msg_id_t const msgid,
     
 	// 设置定时器
 	((ke_timer_set_handler)SVC_ke_timer_set)(TEMPTIMECNT_ENOUGH_TIMEOUT_TIMER, TASK_APP, 6000);	//400 * 10ms
-    temp_sampleTimerCb();
+	temp_sampleTimerCb();
 	
-    return(KE_MSG_CONSUMED);
+	return(KE_MSG_CONSUMED);
+}
+
+int mcu_gpio_led_toggle_timer(ke_msg_id_t const msgid,
+									void *param,
+									ke_task_id_t const dest_id,
+									ke_task_id_t const src_id)
+{
+	GPIO_SetBits(P1, BIT4);
+	// 设置定时器
+	((ke_timer_set_handler)SVC_ke_timer_set)(MCU_GPIO_LED_TOGGLE_TIMER, TASK_APP, 20);	//400 * 10ms
+	mcu_gpio_toggle_TimerCb();
+	
+	return(KE_MSG_CONSUMED);
 }
 
 /**
@@ -848,7 +862,9 @@ KE_MSG_HANDLER_TAB(appm)
 	#endif
 
     #if(USER_PROJ_TEMPLATE)
-    {TEMPTIMECNT_ENOUGH_TIMEOUT_TIMER,   (ke_msg_func_t)temptimecnt_enough_timeout_timer},
+	{TEMPTIMECNT_ENOUGH_TIMEOUT_TIMER,	(ke_msg_func_t)temptimecnt_enough_timeout_timer},
+	{MCU_GPIO_LED_TOGGLE_TIMER,			(ke_msg_func_t)mcu_gpio_led_toggle_timer},
+
     #endif
 
     {GAPM_DEVICE_READY_IND,     (ke_msg_func_t)gapm_device_ready_ind_handler},	//gapm ready,reset stack
@@ -857,7 +873,7 @@ KE_MSG_HANDLER_TAB(appm)
     {GAPC_SET_DEV_INFO_REQ_IND, (ke_msg_func_t)gapc_set_dev_info_req_ind_handler},
     //DYC added to rsp the slave update param req
     {GAPC_PARAM_UPDATE_REQ_IND,	(ke_msg_func_t)gapc_param_update_req_ind_handler},
-    {GAPC_CONNECTION_REQ_IND,   (ke_msg_func_t)gapc_connection_req_ind_handler},
+    {GAPC_CONNECTION_REQ_IND,   (ke_msg_func_t)gapc_connection_req_ind_handler},	
     {GAPC_CMP_EVT,              (ke_msg_func_t)gapc_cmp_evt_handler},			//nothing
     {GAPC_DISCONNECT_IND,       (ke_msg_func_t)gapc_disconnect_ind_handler},
     {GAPM_PROFILE_ADDED_IND,    (ke_msg_func_t)gapm_profile_added_ind_handler},	//prf added  nothing

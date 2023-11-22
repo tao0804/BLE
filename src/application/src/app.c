@@ -12,6 +12,7 @@
  */
 
 #include "panip_config.h"             // SW configuration
+#include "mcu_hal.h"
 
 #if (BLE_APP_PRESENT)
 #include <string.h>
@@ -212,6 +213,8 @@ void appm_init()
         }
         #endif // #if (NVDS_SUPPORT)
     }
+
+        mcu_gpio_led_init();	//yu init P14 gpio
 		//For tmp project
 		app_init_ind_func();
 }

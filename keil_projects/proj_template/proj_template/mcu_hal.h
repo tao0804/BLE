@@ -39,7 +39,11 @@ enum {
 	MCU_P15_ADC_CH5,
 };
 
+#define  GPIO_TIMER_PERIOD  10
+
 void mcu_gpio_user_init(void);
+void mcu_gpio_led_init(void);
+void mcu_gpio_toggle_TimerCb(void);
 void mcu_adc_start_channel_convert(ADC_CHANNEL channel);
 void mcu_adc_init(MCU_ADC_TAB *p_table, uint8 tableNum);
 void mcu_adc_isr(void);

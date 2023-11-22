@@ -1,13 +1,16 @@
 #include "mcu_hal.h"
 #include "stack_svc_api.h"
 #include "PN102Series.h"
+#include "peripherals.h"
 
-#define MCU_AVDD_CFG 2.5
+// #define MCU_AVDD_CFG 2.5
+#define MCU_AVDD_CFG 2.4
 #define ARRAY_NUM(arr)	(sizeof(arr)/sizeof(arr[0]))
 
 uint8 mcuAdcTableNum = 0;
 MCU_ADC_TAB * p_mcuAdcTable = NULL;
-volatile uint16 mcuAdcUserChIdx = 0;	// 当前采集点的Table索引信息，p_mcuAdcTable[mcuAdcUserChIdx]
+uint8 mcuGpioCnt = 0;
+volatile uint16 mcuAdcUserChIdx = 0;	// 当前采集点的Table索引信息,p_mcuAdcTable[mcuAdcUserChIdx]
 
 const MCU_ADC_TAB adcCfgTable[] = {
 	{ADC_CH02, 10, MCU_AVDD_CFG/4096, P1, BIT2, &SYS->P1_MFP, SYS_MFP_P12_Msk, SYS_MFP_P12_ADC_CH2},
@@ -24,7 +27,38 @@ void mcu_gpio_user_init(void)
 	GPIO_PullUp(P1, BIT0, GPIO_PULLUP_ENABLE);
 	GPIO_ENABLE_DIGITAL_PATH(P1, BIT0);
 	GPIO_SetBits(P1, BIT0);
-	// GPIO_ClearBits(P1, BIT0);	// 拉低测低功耗电流
+	// GPIO_ClearBits(P1, BIT0);	// 拉低测电流
+}
+
+void mcu_gpio_led_init(void)
+{// led初始化
+	SYS->P1_MFP &= ~(SYS_MFP_P14_Msk);
+	SYS->P1_MFP |= SYS_MFP_P14_GPIO;
+	GPIO_InitOutput(P1, BIT4, GPIO_HIGH_LEVEL);
+	GPIO_PullUp(P1, BIT4, GPIO_PULLUP_ENABLE);
+	GPIO_ENABLE_DIGITAL_PATH(P1, BIT4);
+	// GPIO_SetBits(P1, BIT4);
+	GPIO_ClearBits(P1, BIT4);
+	// yu 首次设置定时器
+	((ke_timer_set_handler)SVC_ke_timer_set)(MCU_GPIO_LED_TOGGLE_TIMER, TASK_APP, 20);	//400 * 10ms
+}
+
+void mcu_gpio_toggle_TimerCb(void)
+{
+	 if(sys_first_ble_conn_flag == 0)
+	 {
+		++mcuGpioCnt;
+		if(mcuGpioCnt >= GPIO_TIMER_PERIOD)
+		{
+			mcuGpioCnt = 0;
+			GPIO_ClearBits(P1, BIT4);
+		}
+	 }
+	 else if(sys_first_ble_conn_flag == 1)
+	 {
+		GPIO_SetBits(P1, BIT4);
+	 }
+
 }
 ///////////////////////////////////////////////adc_driver///////////////////////////////////////////////
 

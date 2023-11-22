@@ -223,6 +223,8 @@ void app_connection_req_ind_func ( uint8_t conidx, struct gapc_connection_req_in
 	#endif
     sys_ble_conn_flag = 1;
     
+	sys_first_ble_conn_flag = 1;	// yu code
+
     return;
 }
 

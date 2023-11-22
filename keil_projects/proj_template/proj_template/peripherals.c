@@ -21,11 +21,13 @@
 #if(EXT_WAKEUP)
 uint8_t wakeup_cnt;				//休眠唤醒的计数，unit，连接间隔或广播间隔。
 #endif
-uint8_t sys_power_flag;			//为1,关闭32k,系统完全休眠。为其他，不关闭
-uint8_t sys_sleep_flag;			//为1,系统进入低功耗。为0，系统唤醒。
+uint8_t sys_power_flag;			//为1,关闭32k,系统完全休眠.为其他,不关闭
+uint8_t sys_sleep_flag;			//为1,系统进入低功耗.为0,系统唤醒.
 uint8_t sys_ble_conn_flag;      //1,connect;0,disconnect
 uint16_t USART_RX_CNT;
 uint8_t  USART_RX_BUF[USART_REC_LEN];
+
+uint8_t sys_first_ble_conn_flag;	// yu code)1,first connect;0,disconnect
 
 app_var_t app_var __attribute__((at(APP_VAR_ADDR)));
 /*---------------------------------------------------------------------------------------------------------*/
@@ -37,32 +39,53 @@ app_var_t app_var __attribute__((at(APP_VAR_ADDR)));
 typedef void (FUNC_PTR)(void);
 #endif
 
- 
+//PANCHIP MAC
+#define MAC0_ADDR 0x400050
+#define MAC1_ADDR 0x400054
+
+//FT MAC
+//#define MAC0_ADDR 0x400058
+//#define MAC1_ADDR 0x40005c 
+
+void FMC_ReadRom(uint32_t u32Addr, uint8_t *rom_data)
+{
+    SYS_UnlockReg();
+    FMC_ENABLE_ISP();
+    uint32_t data;
+    data = (FMC_Read(u32Addr));
+    memcpy(rom_data, &data, sizeof(uint32_t));
+    SYS_LockReg();
+}
+
 void Set_Device_MacAddr(void)
 {
-	uint8_t addrvalue[6] = {0};
+	// uint8_t addrvalue[6] = {0};
 	
-	SYS_UnlockReg();
-	FMC_Open();
-	FMC->ISPCMD = FMC_ISPCMD_READ_UID;
-	FMC->ISPADDR = 0x50;
-	FMC->ISPTRG = FMC_ISPTRG_ISPGO_Msk;
-	while (FMC->ISPTRG & FMC_ISPTRG_ISPGO_Msk) ;
-	addrvalue[0] = FMC->ISPDAT & 0xff;
-	addrvalue[1] = FMC->ISPDAT >> 8;
-	addrvalue[2] = FMC->ISPDAT >> 16;
-	addrvalue[3] = FMC->ISPDAT >> 24;
+	// SYS_UnlockReg();
+	// FMC_Open();
+	// FMC->ISPCMD = FMC_ISPCMD_READ_UID;
+	// FMC->ISPADDR = 0x50;
+	// FMC->ISPTRG = FMC_ISPTRG_ISPGO_Msk;
+	// while (FMC->ISPTRG & FMC_ISPTRG_ISPGO_Msk) ;
+	// addrvalue[0] = FMC->ISPDAT & 0xff;
+	// addrvalue[1] = FMC->ISPDAT >> 8;
+	// addrvalue[2] = FMC->ISPDAT >> 16;
+	// addrvalue[3] = FMC->ISPDAT >> 24;
 	
-	FMC->ISPCMD = FMC_ISPCMD_READ_UID;
-	FMC->ISPADDR = 0x54;
-	FMC->ISPTRG = FMC_ISPTRG_ISPGO_Msk;
-	while (FMC->ISPTRG & FMC_ISPTRG_ISPGO_Msk) ;
-	addrvalue[4] = FMC->ISPDAT & 0xff;
-	addrvalue[5] = FMC->ISPDAT >> 8;
+	// FMC->ISPCMD = FMC_ISPCMD_READ_UID;
+	// FMC->ISPADDR = 0x54;
+	// FMC->ISPTRG = FMC_ISPTRG_ISPGO_Msk;
+	// while (FMC->ISPTRG & FMC_ISPTRG_ISPGO_Msk) ;
+	// addrvalue[4] = FMC->ISPDAT & 0xff;
+	// addrvalue[5] = FMC->ISPDAT >> 8;
 	
-	FMC_Close();
-	SYS_LockReg();
-	memcpy(app_var.co_default_bdaddr.addr,addrvalue,BD_ADDR_LEN);
+	// FMC_Close();
+	// SYS_LockReg();
+	// memcpy(app_var.co_default_bdaddr.addr,addrvalue,BD_ADDR_LEN);
+	uint8_t addrvalue[8];
+    FMC_ReadRom(MAC0_ADDR, addrvalue);
+    FMC_ReadRom(MAC1_ADDR, addrvalue + 4);
+    memcpy(app_var.co_default_bdaddr.addr, addrvalue, BD_ADDR_LEN);
 } 
  
 void UART0_Handler(void)
@@ -123,10 +146,15 @@ void sys_clear_global_var(void)
 	sys_power_flag = 0;
 	sys_sleep_flag = 0;
     sys_ble_conn_flag = 0;
+
+	sys_first_ble_conn_flag = 0;
+
 	app_var.Wakeup_int = 0;
 	app_var.rf_close_en = RF_CLOSE_EN;	
 	app_var.Gpio_retain_en = GPIO_RETAIN_EN;
 	app_var.default_sleep_en = SLEEP_EN;
+	// set tx power
+	// app_var.default_tx_power = TX_POWER_0DBM;
 	app_var.default_tx_power = TX_POWER_0DBM;
 	app_var.ext_wakeup_enable = EXT_WAKEUP;
 	app_var.RF_mode_select = XN297_MODE_EN;

@@ -214,7 +214,7 @@ void appm_init()
         #endif // #if (NVDS_SUPPORT)
     }
 
-        mcu_gpio_led_init();	//yu init P14 gpio
+        led_gpio_first_timing();
 		//For tmp project
 		app_init_ind_func();
 }

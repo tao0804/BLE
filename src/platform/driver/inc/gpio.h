@@ -366,7 +366,7 @@ typedef enum
   GPIO_PULL_UP      = 0x01,
 } GPIO_PULL_T;
 
-typedef enum
+typedef enum    // 库里这个枚举有错误
 {
     GPIO_HIGH_LEVEL = 0x00,
     GPIO_LOW_LEVEL  = 0x01,
@@ -377,6 +377,11 @@ void GPIO_DisableInt(GPIO_T *gpio, uint32_t u32Pin);
 void GPIO_PullUp(GPIO_T *gpio, uint32_t u32PinMask, uint8_t u8Mode);
 void GPIO_EnableDebounce(GPIO_T *gpio, uint32_t u32Pin);
 void GPIO_DisableDebounce(GPIO_T *gpio, uint32_t u32Pin);
+
+// yu 
+void GPIO_Store(void);
+void GPIO_Retract(void);
+
 void GPIO_InitOutput(GPIO_T * GPIOx, uint32_t GPIO_Pin, GPIO_VALUE_T GPIO_Value);
 static inline void GPIO_SetBits(GPIO_T* GPIOx, uint32_t GPIO_Pin) 
 {

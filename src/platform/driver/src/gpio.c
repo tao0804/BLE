@@ -9,7 +9,7 @@
  * Copyright (C) 2016 Panchip Technology Corp. All rights reserved.
 *****************************************************************************/
 #include "PN102Series.h"
-
+#include "string.h"
 
 
 /** @addtogroup PN102_Device_Driver PN102 Device Driver
@@ -51,7 +51,7 @@ void GPIO_SetMode(GPIO_T *gpio, uint32_t u32PinMask, uint32_t u32Mode)
 	
     }
 //	if((GPIO_MODE_INPUT==u32Mode)|(GPIO_MODE_QUASI==u32Mode))
-		gpio->DINOFF  &= ~ ( u32PinMask<<16 ); //gpio 检测使能
+		gpio->DINOFF  &= ~ ( u32PinMask<<16 );	// gpio���ʹ��
 //    if((GPIO_MODE_INPUT==u32Mode)||(GPIO_MODE_QUASI==u32Mode))
 //		gpio->DINOFF |=  u32PinMask;		//digital pull up path enabled 
     if((GPIO_MODE_QUASI==u32Mode))
@@ -76,8 +76,8 @@ void GPIO_SetMode(GPIO_T *gpio, uint32_t u32PinMask, uint32_t u32Mode)
  */
 void GPIO_EnableInt(GPIO_T *gpio, uint32_t u32Pin, uint32_t u32IntAttribs)
 {
-    gpio->INTTYPE |= (((u32IntAttribs >> 24) & 0xFFUL) << u32Pin);//level/edge choose u32IntAttribs第六位决定
-    gpio->INTEN |= ((u32IntAttribs & 0xFFFFFFUL) << u32Pin);//选择上升或者下降或者双沿触发 或 高电平或者低电平触发
+    gpio->INTTYPE |= (((u32IntAttribs >> 24) & 0xFFUL) << u32Pin);//level/edge choose u32IntAttribs�?�?位决�?
+    gpio->INTEN |= ((u32IntAttribs & 0xFFFFFFUL) << u32Pin);//选择上升或者下降或者双沿触�? �? 高电平或者低电平触发
 }
 
 
@@ -128,7 +128,7 @@ void GPIO_InitOutput(GPIO_T * GPIOx, uint32_t GPIO_Pin, GPIO_VALUE_T GPIO_Value)
  */
 void GPIO_EnableDebounce(GPIO_T *gpio, uint32_t u32Pin)//使能去抖功能
 {
-    gpio->DBEN |= (1UL << u32Pin);//DBEN置位
+    gpio->DBEN |= (1UL << u32Pin);//DBEN�?�?
     GPIO_DB->DBCTL = GPIO_DBCTL_DBCLKSEL_32768;//bit[4] 0 = De-bounce counter clock source is HCLK.1 = De-bounce counter clock source is 32 kHz internal low speed RC oscillator(LIRC).
 }
 
@@ -169,7 +169,25 @@ void GPIO_PullUp(GPIO_T *gpio, uint32_t u32PinMask, uint8_t u8Mode)
     }
 }
 
+// yu 休眠情况下GPIO电平保持功能使能
+uint8_t m_gpio_status = 0;
+GPIO_T  m_gpios[6];
 
+void GPIO_Store(void)
+{
+//    memset(&m_gpios, 0, sizeof(m_gpios));
+	m_gpio_status = 1;
+	memcpy(&m_gpios[1], P1, sizeof(GPIO_T));
+}
+
+void GPIO_Retract(void)
+{
+    if (0 == m_gpio_status)
+    {
+        return;
+    }
+   memcpy(P1, &m_gpios[1], sizeof(GPIO_T));
+}
 /*@}*/ /* end of group PN102_GPIO_EXPORTED_FUNCTIONS */
 
 /*@}*/ /* end of group PN102_GPIO_Driver */

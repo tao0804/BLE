@@ -43,6 +43,7 @@ enum {
 
 void mcu_gpio_user_init(void);
 void mcu_gpio_led_init(void);
+void led_gpio_first_timing(void);
 void mcu_gpio_toggle_TimerCb(void);
 void mcu_adc_start_channel_convert(ADC_CHANNEL channel);
 void mcu_adc_init(MCU_ADC_TAB *p_table, uint8 tableNum);

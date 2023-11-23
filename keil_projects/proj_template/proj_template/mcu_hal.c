@@ -37,7 +37,12 @@ void mcu_gpio_led_init(void)
 	GPIO_InitOutput(P1, BIT4, GPIO_HIGH_LEVEL);
 	GPIO_PullUp(P1, BIT4, GPIO_PULLUP_ENABLE);
 	GPIO_ENABLE_DIGITAL_PATH(P1, BIT4);
-	// GPIO_SetBits(P1, BIT4);
+	// GPIO_SetMode(P2, BIT4, GPIO_MODE_OUTPUT);
+	GPIO_SetBits(P1, BIT4);
+}
+
+void led_gpio_first_timing(void)
+{
 	GPIO_ClearBits(P1, BIT4);
 	// yu 首次设置定时器
 	((ke_timer_set_handler)SVC_ke_timer_set)(MCU_GPIO_LED_TOGGLE_TIMER, TASK_APP, 20);	//400 * 10ms
@@ -51,7 +56,8 @@ void mcu_gpio_toggle_TimerCb(void)
 		if(mcuGpioCnt >= GPIO_TIMER_PERIOD)
 		{
 			mcuGpioCnt = 0;
-			GPIO_ClearBits(P1, BIT4);
+			GPIO_ClearBits(P1, BIT4);//这里我不知道亮的时间
+			// GPIO_Store();
 		}
 	 }
 	 else if(sys_first_ble_conn_flag == 1)

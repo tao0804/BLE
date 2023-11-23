@@ -34,6 +34,7 @@
 #include "stack_svc_api.h"
 #include "temperature.h"
 #include "mcu_hal.h"
+#include "gpio.h"
 
 #if (USER_PROJ_TEMPLATE)
 #include "proj_template.h"
@@ -59,7 +60,7 @@ const app_info_t app_info __attribute__((at(APP_INFO_ADDR)))=
 void ble_sleep_wakeup_init()
 {
 	periph_init();																//System peripheral initialization
-	
+	mcu_gpio_led_init();	//yu init P14 gpio
     GLOBAL_INT_STOP();
     
     ble_master_tgsoft_rst_setf(1);
@@ -89,8 +90,12 @@ __asm void stack_sp_restore(void)
 //POWER UP init
 void ble_normal_reset_init()
 {
+	// extern uint8_t m_gpio_status;
+	// m_gpio_status = 0;
     sys_clear_global_var();
     periph_init();
+	mcu_gpio_led_init();	//yu init P14 gpio
+
 
 	printf("CPU @ %dHz,%s\n", SystemCoreClock, app_info.co_default_bdname);
 	#if(PROJ_OTA)
@@ -108,7 +113,7 @@ void ble_normal_reset_init()
     GLOBAL_INT_START();
 
     proj_template_ini();
-    user_code_start(); 											//start ble stack
+	user_code_start(); 											//start ble stack											
 }
 
 //init finish,ble stack process
@@ -143,6 +148,9 @@ void ble_stack_process()
 		// 休眠的时间等于广播间隔和连接间隔.休眠时间到,mcu唤醒
         if (app_var.default_sleep_en)
         {
+			#if(GPIO_RETAIN_EN)
+				GPIO_Store();
+			#endif
             GLOBAL_INT_DISABLE();
 			
             // Check if the processor clock can be gated
@@ -182,6 +190,11 @@ void ble_init(void)
 
 int main(void)
 {
+	#if (GPIO_RETAIN_EN)
+	// mcu_gpio_led_init();
+    GPIO_Retract();
+	#endif
+
 	stack_sp_restore();
     ble_init();
     ble_stack_process();

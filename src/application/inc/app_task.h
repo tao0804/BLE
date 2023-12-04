@@ -83,7 +83,8 @@ enum appm_msg
 
     #if(USER_PROJ_TEMPLATE)
     TEMPTIMECNT_ENOUGH_TIMEOUT_TIMER,
-    MCU_GPIO_LED_TOGGLE_TIMER,
+    // MCU_GPIO_LED_TOGGLE_TIMER,   // commentary:for structure changed
+    APP_LED_BLINK_TIMER,
     #endif
 
     #if (BLE_APP_HT)

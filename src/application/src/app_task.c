@@ -15,6 +15,8 @@
 #include "temperature.h"
 #include "mcu_hal.h"
 
+#include "led_app.h"
+
 #if (BLE_APP_PRESENT)
 
 #include "app_task.h"             // Application Manager Task API
@@ -182,23 +184,32 @@ int temptimecnt_enough_timeout_timer(ke_msg_id_t const msgid,
 									ke_task_id_t const src_id)
 {
     
-	// 设置定时器
+	// 设置定时�?
 	((ke_timer_set_handler)SVC_ke_timer_set)(TEMPTIMECNT_ENOUGH_TIMEOUT_TIMER, TASK_APP, 6000);	//400 * 10ms
 	temp_sampleTimerCb();
 	
 	return(KE_MSG_CONSUMED);
 }
 
-int mcu_gpio_led_toggle_timer(ke_msg_id_t const msgid,
+// int mcu_gpio_led_toggle_timer(ke_msg_id_t const msgid,
+// 									void *param,
+// 									ke_task_id_t const dest_id,
+// 									ke_task_id_t const src_id)
+// {
+// 	GPIO_SetBits(P1, BIT4);
+// 	((ke_timer_set_handler)SVC_ke_timer_set)(MCU_GPIO_LED_TOGGLE_TIMER, TASK_APP, 200);	//400 * 10ms
+// 	mcu_gpio_toggle_TimerCb();
+	
+// 	return(KE_MSG_CONSUMED);
+// }
+
+int app_led_blink_timer(ke_msg_id_t const msgid,
 									void *param,
 									ke_task_id_t const dest_id,
 									ke_task_id_t const src_id)
 {
-	GPIO_SetBits(P1, BIT4);
-	// 设置定时器
-	((ke_timer_set_handler)SVC_ke_timer_set)(MCU_GPIO_LED_TOGGLE_TIMER, TASK_APP, 20);	//400 * 10ms
-	mcu_gpio_toggle_TimerCb();
-	
+
+	app_led_blink_timerCb();
 	return(KE_MSG_CONSUMED);
 }
 
@@ -863,7 +874,8 @@ KE_MSG_HANDLER_TAB(appm)
 
     #if(USER_PROJ_TEMPLATE)
 	{TEMPTIMECNT_ENOUGH_TIMEOUT_TIMER,	(ke_msg_func_t)temptimecnt_enough_timeout_timer},
-	{MCU_GPIO_LED_TOGGLE_TIMER,			(ke_msg_func_t)mcu_gpio_led_toggle_timer},
+	// {MCU_GPIO_LED_TOGGLE_TIMER,			(ke_msg_func_t)mcu_gpio_led_toggle_timer},  // commentary:for structure changed
+    {APP_LED_BLINK_TIMER,		       	(ke_msg_func_t)app_led_blink_timer},
 
     #endif
 

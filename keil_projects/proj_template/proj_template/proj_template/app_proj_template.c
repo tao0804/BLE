@@ -23,6 +23,7 @@
 #include "stack_svc_api.h"
 #include "mcu_hal.h"
 #include "temperature.h"
+#include "led_app.h"
 
 static struct app_proj_template_env_tag app_proj_template_env;
 void app_proj_template_init(void)
@@ -31,6 +32,8 @@ void app_proj_template_init(void)
 	temp_relate_init();	//init
 	// 首次上电定时器set,间断性定时器再设置一次
 	((ke_timer_set_handler)SVC_ke_timer_set)(TEMPTIMECNT_ENOUGH_TIMEOUT_TIMER, TASK_APP, 6000);	//400 * 10ms
+
+	led_reset_init();
 }
 
 

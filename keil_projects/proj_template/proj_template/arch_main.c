@@ -92,9 +92,9 @@ void ble_normal_reset_init()
 {
 	// extern uint8_t m_gpio_status;
 	// m_gpio_status = 0;
-    sys_clear_global_var();
+    sys_clear_global_var();       
     periph_init();
-	mcu_gpio_led_init();	//yu init P14 gpio
+	mcu_gpio_led_init();	//yu init P14 gpio,note:初始化放在ble_normal_reset_init更内层接口则无用
 
 
 	printf("CPU @ %dHz,%s\n", SystemCoreClock, app_info.co_default_bdname);

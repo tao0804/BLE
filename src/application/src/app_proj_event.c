@@ -25,6 +25,8 @@
  */
 #include "panip_config.h"             // SW configuration
 #include "string.h"
+#include "led_app.h"
+
 #if (BLE_APP_PRESENT)
 
 /*
@@ -222,9 +224,16 @@ void app_connection_req_ind_func ( uint8_t conidx, struct gapc_connection_req_in
 	((ke_timer_set_handler)SVC_ke_timer_set)(APP_CONN_UPDATE_TIMER, TASK_APP, 500);
 	#endif
     sys_ble_conn_flag = 1;
-    
-	sys_first_ble_conn_flag = 1;	// yu code
-
+    // sys_first_ble_conn_flag = 1;	// yu code
+	
+	#if PROJ_TEMP_CONN
+	if(sys_first_ble_conn_flag == 0)
+	{
+		sys_first_ble_conn_flag = 1;	// 首次已连接
+		led_set_mode(LED_MODE_OFF);
+	}
+	#endif
+	
     return;
 }
 

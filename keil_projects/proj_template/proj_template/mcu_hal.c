@@ -3,6 +3,7 @@
 #include "PN102Series.h"
 #include "peripherals.h"
 
+
 // #define MCU_AVDD_CFG 2.5
 #define MCU_AVDD_CFG 2.4
 #define ARRAY_NUM(arr)	(sizeof(arr)/sizeof(arr[0]))
@@ -31,41 +32,55 @@ void mcu_gpio_user_init(void)
 }
 
 void mcu_gpio_led_init(void)
-{// led初始化
+{// It's not appropriate to set led on/off
 	SYS->P1_MFP &= ~(SYS_MFP_P14_Msk);
 	SYS->P1_MFP |= SYS_MFP_P14_GPIO;
-	GPIO_InitOutput(P1, BIT4, GPIO_HIGH_LEVEL);
-	GPIO_PullUp(P1, BIT4, GPIO_PULLUP_ENABLE);
+	// GPIO_InitOutput(P1, BIT4, GPIO_HIGH_LEVEL);
+	// GPIO_PullUp(P1, BIT4, GPIO_PULLUP_ENABLE);
+	GPIO_SetMode(P2, BIT4, GPIO_MODE_OUTPUT);
 	GPIO_ENABLE_DIGITAL_PATH(P1, BIT4);
-	// GPIO_SetMode(P2, BIT4, GPIO_MODE_OUTPUT);
-	GPIO_SetBits(P1, BIT4);
+	// GPIO_SetBits(P1, BIT4);
 }
 
-void led_gpio_first_timing(void)
+void mcu_led_light(bool light)
 {
-	GPIO_ClearBits(P1, BIT4);
-	// yu 首次设置定时器
-	((ke_timer_set_handler)SVC_ke_timer_set)(MCU_GPIO_LED_TOGGLE_TIMER, TASK_APP, 20);	//400 * 10ms
+	if(light)
+	{
+		GPIO_ClearBits(P1, BIT4);	// led on
+	}
+	else
+	{
+		GPIO_SetBits(P1, BIT4);	// led off
+	}
 }
 
-void mcu_gpio_toggle_TimerCb(void)
-{
-	 if(sys_first_ble_conn_flag == 0)
-	 {
-		++mcuGpioCnt;
-		if(mcuGpioCnt >= GPIO_TIMER_PERIOD)
-		{
-			mcuGpioCnt = 0;
-			GPIO_ClearBits(P1, BIT4);//这里我不知道亮的时间
-			// GPIO_Store();
-		}
-	 }
-	 else if(sys_first_ble_conn_flag == 1)
-	 {
-		GPIO_SetBits(P1, BIT4);
-	 }
+// commentary:for structure changed
+// void led_gpio_first_timing(void)
+// {
+// 	GPIO_ClearBits(P1, BIT4);
+// 	// yu 首次设置定时器
+// 	((ke_timer_set_handler)SVC_ke_timer_set)(MCU_GPIO_LED_TOGGLE_TIMER, TASK_APP, 20);	//400 * 10ms
+// }
 
-}
+// void mcu_gpio_toggle_TimerCb(void)
+// {
+// 	 if(sys_first_ble_conn_flag == 0)
+// 	 {
+// 		++mcuGpioCnt;
+// 		if(mcuGpioCnt >= GPIO_TIMER_PERIOD)
+// 		{
+// 			mcuGpioCnt = 0;
+// 			GPIO_ClearBits(P1, BIT4);
+// 			// GPIO_Store();
+// 		}
+// 		// GPIO_ClearBits(P1, BIT4);
+// 	 }
+// 	 else if(sys_first_ble_conn_flag == 1)
+// 	 {
+// 		GPIO_SetBits(P1, BIT4);
+// 	 }
+// }
+
 ///////////////////////////////////////////////adc_driver///////////////////////////////////////////////
 
 // start adc convert

@@ -13,6 +13,7 @@
 
 #include "panip_config.h"             // SW configuration
 #include "mcu_hal.h"
+#include "led_app.h"
 
 #if (BLE_APP_PRESENT)
 #include <string.h>
@@ -214,7 +215,8 @@ void appm_init()
         #endif // #if (NVDS_SUPPORT)
     }
 
-        led_gpio_first_timing();
+        // led_gpio_first_timing();    // commentary:for structure changed
+        // led_reset_init();   // new structure
 		//For tmp project
 		app_init_ind_func();
 }

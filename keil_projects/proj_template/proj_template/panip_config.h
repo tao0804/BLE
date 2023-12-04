@@ -17,6 +17,7 @@
 //Customer marco
 #define USER_PROJ_TEMPLATE      (1)
 #define PROJ_OTA                (0) // 给macro置0,原先为1
+#define PROJ_TEMP_CONN			(1)
 
 
 // DSP Log enable

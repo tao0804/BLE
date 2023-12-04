@@ -68,11 +68,11 @@ void led_set_mode(LedMode_t mode)
 
 void app_led_blink_timerCb(void)
 {
-	if (ledInfo.ledStatus == LED_MODE_ON) {
+	if (ledInfo.ledStatus == BOOL_LED_ON) {
 		led_blink_timer_on(ledInfo.ledIntv_time);
-		mcu_led_light(LED_MODE_OFF);
-	} else if (ledInfo.ledStatus == LED_MODE_OFF) {
+		led_control_status(BOOL_LED_OFF);
+	} else if (ledInfo.ledStatus == BOOL_LED_OFF) {
 		led_blink_timer_on(ledInfo.ledOn_time);
-		mcu_led_light(LED_MODE_OFF);
+		led_control_status(BOOL_LED_ON);
 	}
 }

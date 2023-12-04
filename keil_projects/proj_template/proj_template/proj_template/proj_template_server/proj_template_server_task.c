@@ -126,7 +126,7 @@ __STATIC int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
 
         switch (att_idx)
         {
-			// é…ç½®attå†™å±æ€§
+			// ÅäÖÃattĞ´ÊôĞÔ
 			case PROJ_TEMPLATE_IDX_CONFIG_VAL:
 			{
 				if(param->length == sizeof(TempReadCfg_t))
@@ -217,7 +217,7 @@ __STATIC int gattc_read_req_ind_handler(ke_msg_id_t const msgid, struct gattc_re
         {
 			case PROJ_TEMPLATE_IDX_TEMP_VAL:
 			{
-				length = 1; // è¦è¯»å–/å‘é€çš„å•ä¸ªå­—èŠ‚çš„æ•°æ®é•¿åº¦(å­—èŠ‚)
+				length = 1; // Òª¶ÁÈ¡/·¢ËÍµÄµ¥¸ö×Ö½ÚµÄÊı¾İ³¤¶È(×Ö½Ú)
 			}
 			break;
 

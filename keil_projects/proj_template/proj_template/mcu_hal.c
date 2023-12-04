@@ -35,10 +35,10 @@ void mcu_gpio_led_init(void)
 {// It's not appropriate to set led on/off
 	SYS->P1_MFP &= ~(SYS_MFP_P14_Msk);
 	SYS->P1_MFP |= SYS_MFP_P14_GPIO;
-	// GPIO_InitOutput(P1, BIT4, GPIO_HIGH_LEVEL);
-	// GPIO_PullUp(P1, BIT4, GPIO_PULLUP_ENABLE);
-	GPIO_SetMode(P2, BIT4, GPIO_MODE_OUTPUT);
+	GPIO_PullUp(P1, BIT4, GPIO_PULLUP_ENABLE);
+	GPIO_SetMode(P1, BIT4, GPIO_MODE_OUTPUT);
 	GPIO_ENABLE_DIGITAL_PATH(P1, BIT4);
+	// GPIO_InitOutput(P1, BIT4, GPIO_HIGH_LEVEL);
 	// GPIO_SetBits(P1, BIT4);
 }
 
